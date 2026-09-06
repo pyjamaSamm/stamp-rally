@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0d; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #ff5a1f; text-decoration: none; }
+  a:hover { color: #ff8354; }
+  input, button { font: inherit; }
+  @keyframes thud {
+    0% { transform: scale(2.4) rotate(-14deg); opacity: 0; }
+    45% { transform: scale(.9) rotate(-6deg); opacity: 1; }
+    70% { transform: scale(1.06) rotate(-3deg); }
+    100% { transform: scale(1) rotate(-4deg); opacity: 1; }
+  }
+  @keyframes ink { 0% { transform: scale(.2); opacity: .55; } 100% { transform: scale(3.2); opacity: 0; } }
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes sweep { from { transform: translateY(-100%); } to { transform: translateY(320%); } }
+  @keyframes blip { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',Helvetica,sans-serif;display:flex;justify-content:center">
+<div style="width:100%;max-width:430px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#0b0b0d;border-left:1px solid #1c1c22;border-right:1px solid #1c1c22;overflow:hidden">
+
+  <!-- WELCOME -->
+  <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:34px 22px 22px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:#8a8a96;text-transform:uppercase">no install · no account · offline</div>
+      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:46px;line-height:.92;letter-spacing:-.03em;margin-top:16px;text-transform:uppercase">Stamp<br />Rally</div>
+      <div style="font-size:15px;line-height:1.5;color:#a8a8b2;margin-top:14px;max-width:300px;text-wrap:pretty">A paper roadmap card that lives on your phone for one afternoon, then deletes itself. The stall opens a stamp round; you scan it while you're standing there.</div>
+
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px">
+        <div onClick="{{ goCreate }}" style="cursor:pointer;padding:18px;border-radius:14px;background:#ff5a1f;color:#12100e;display:flex;align-items:center;justify-content:space-between" style-hover="background:#ff6f3c">
+          <div>
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-.01em">Create event</div>
+            <div style="font-size:13px;opacity:.72;margin-top:2px">You run it, you authorise the stalls</div>
+          </div>
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:24px">→</div>
+        </div>
+        <div onClick="{{ goJoin }}" style="cursor:pointer;padding:18px;border-radius:14px;background:#13131a;border:1px solid #2a2a34;display:flex;align-items:center;justify-content:space-between" style-hover="border-color:#4a4a58">
+          <div>
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-.01em">Join event</div>
+            <div style="font-size:13px;color:#8a8a96;margin-top:2px">With the code off the invite or the door</div>
+          </div>
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:24px;color:#8a8a96">→</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ created }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ goAdmin }}" style="cursor:pointer;margin-top:14px;padding:14px 16px;border:1px solid #24242c;border-radius:12px;background:#101014;display:flex;align-items:center;justify-content:space-between;gap:12px" style-hover="border-color:#4a4a58">
+          <div style="min-width:0">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78">RESUME AS ADMIN</div>
+            <div style="font-weight:700;font-size:14.5px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ eventName }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a96;margin-top:3px">{{ eventId }} · closes in {{ eventLeft }}</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5a1f;display:flex;align-items:center;gap:6px;flex:0 0 auto"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.6s ease-in-out infinite"></span>OPEN</div>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:auto;padding-top:26px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.7;color:#5f5f6a">
+        <div>DEVICE KEY {{ deviceShort }} · generated on this phone</div>
+        <div>PROTOTYPE — every role lives here so you can test the handshake yourself.</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CREATE -->
+  <sc-if value="{{ isCreate }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:34px 22px 22px">
+      <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#8a8a96;align-self:flex-start;border:1px solid #2a2a34;border-radius:99px;padding:6px 11px" style-hover="color:#f2f0ec">← BACK</div>
+      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:34px;line-height:1;letter-spacing:-.03em;text-transform:uppercase;margin-top:22px">Create event</div>
+      <div style="font-size:14px;line-height:1.5;color:#a8a8b2;margin-top:10px;max-width:320px;text-wrap:pretty">Name it and you're the admin. You get a code to put on the invite and the door — everyone else joins with that, then picks whether they're collecting or running a stall.</div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78;margin-top:26px">EVENT NAME</div>
+      <input value="{{ nameDraft }}" onChange="{{ onNameDraft }}" placeholder="Domain Rally · Q3 Offsite" style="margin-top:8px;padding:15px 16px;border-radius:12px;background:#101014;border:1px solid #2a2a34;color:#f2f0ec;font-family:Archivo,sans-serif;font-weight:800;font-size:17px;outline:none;width:100%" style-focus="border-color:#ff5a1f" />
+
+      <div onClick="{{ createEvent }}" style="cursor:pointer;margin-top:14px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Create · become admin</div>
+      <div style="font-size:12.5px;color:#6d6d78;margin-top:11px;line-height:1.5;text-wrap:pretty">Stalls still can't stamp anyone until you bind a device to each of them, face to face.</div>
+    </div>
+  </sc-if>
+
+  <!-- JOIN -->
+  <sc-if value="{{ isJoin }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:34px 22px 22px">
+      <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#8a8a96;align-self:flex-start;border:1px solid #2a2a34;border-radius:99px;padding:6px 11px" style-hover="color:#f2f0ec">← BACK</div>
+      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:34px;line-height:1;letter-spacing:-.03em;text-transform:uppercase;margin-top:22px">Join event</div>
+      <div style="font-size:14px;line-height:1.5;color:#a8a8b2;margin-top:10px;max-width:320px;text-wrap:pretty">The code is on the invite mail, or on the board at the entrance. Same code for visitors and stalls.</div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78;margin-top:26px">EVENT CODE</div>
+      <input value="{{ joinDraft }}" onChange="{{ onJoinDraft }}" placeholder="RLY-XXXX" style="margin-top:8px;padding:15px 16px;border-radius:12px;background:#101014;border:1px solid #2a2a34;color:#f2f0ec;font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.14em;text-transform:uppercase;outline:none;width:100%" style-focus="border-color:#ff5a1f" />
+
+      <sc-if value="{{ hasJoinErr }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:10px;padding:12px 14px;border-radius:11px;background:#150f12;border:1px solid #3a2028;font-size:12.5px;color:#e0616c;line-height:1.45">{{ joinErr }}</div>
+      </sc-if>
+
+      <div onClick="{{ joinEvent }}" style="cursor:pointer;margin-top:14px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Join</div>
+
+      <sc-if value="{{ created }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ fillCode }}" style="cursor:pointer;margin-top:12px;padding:13px 14px;border-radius:11px;border:1px dashed #2a2a34;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.6;text-align:center" style-hover="border-color:#4a4a58;color:#f2f0ec">PROTOTYPE · TAP TO FILL {{ eventId }}</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ROLE PICK -->
+  <sc-if value="{{ isRole }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:34px 22px 22px">
+      <div onClick="{{ leaveRole }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#8a8a96;align-self:flex-start;border:1px solid #2a2a34;border-radius:99px;padding:6px 11px" style-hover="color:#f2f0ec">← LEAVE</div>
+
+      <div style="margin-top:22px;padding:14px 16px;border:1px solid #24242c;border-radius:12px;background:#101014;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="min-width:0">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78">YOU'RE IN</div>
+          <div style="font-weight:700;font-size:15px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ eventName }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a96;margin-top:3px">{{ eventId }} · closes in {{ eventLeft }}</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5a1f;display:flex;align-items:center;gap:6px;flex:0 0 auto"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.6s ease-in-out infinite"></span>OPEN</div>
+      </div>
+
+      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:26px;line-height:1.05;letter-spacing:-.02em;text-transform:uppercase;margin-top:24px">Which one<br />are you?</div>
+
+      <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px">
+        <div onClick="{{ goCollector }}" style="cursor:pointer;padding:18px;border-radius:14px;background:#ff5a1f;color:#12100e;display:flex;align-items:center;justify-content:space-between" style-hover="background:#ff6f3c">
+          <div>
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-.01em">I'm collecting</div>
+            <div style="font-size:13px;opacity:.72;margin-top:2px">My card, my camera</div>
+          </div>
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:24px">→</div>
+        </div>
+        <div onClick="{{ goOrganiser }}" style="cursor:pointer;padding:18px;border-radius:14px;background:#13131a;border:1px solid #2a2a34;display:flex;align-items:center;justify-content:space-between" style-hover="border-color:#4a4a58">
+          <div>
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:-.01em">I'm a stall</div>
+            <div style="font-size:13px;color:#8a8a96;margin-top:2px">Needs the admin to authorise this phone</div>
+          </div>
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:24px;color:#8a8a96">→</div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;padding-top:26px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.7;color:#5f5f6a">
+        <div>DEVICE KEY {{ deviceShort }} · generated on this phone</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= COLLECTOR ================= -->
+  <sc-if value="{{ isCollector }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding-bottom:78px">
+
+      <div style="padding:16px 18px 12px;border-bottom:1px solid #1c1c22;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;background:#0b0b0dee;backdrop-filter:blur(8px);z-index:5">
+        <div>
+          <div style="font-weight:700;font-size:14px;letter-spacing:-.01em">{{ eventName }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;margin-top:2px">CARD EXPIRES IN {{ eventLeft }}</div>
+        </div>
+        <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;border:1px solid #2a2a34;border-radius:99px;padding:6px 10px" style-hover="color:#f2f0ec;border-color:#4a4a58">{{ deviceShort }} ▾</div>
+      </div>
+
+      <sc-if value="{{ expired }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:14px 18px 0;padding:14px 16px;border-radius:12px;background:#1a1216;border:1px solid #3a2028">
+          <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:15px;text-transform:uppercase">Event closed · stamps void</div>
+          <div style="font-size:13px;color:#a8a8b2;margin-top:4px;line-height:1.45">Every card on every phone expired at the same second. Nothing to collect, nothing to store.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showWin }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:14px 18px 0;padding:14px 16px;border-radius:12px;background:#ff5a1f;color:#12100e;display:flex;gap:12px;align-items:flex-start;animation:rise .35s ease both">
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:26px;line-height:1">★</div>
+          <div style="flex:1">
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:15px;text-transform:uppercase">{{ requiredLabel }} stamps — you're in</div>
+            <div style="font-size:13px;margin-top:3px;opacity:.78;line-height:1.4">Show this card at the prize desk. Keep going if you want the full sweep.</div>
+          </div>
+          <div onClick="{{ dismissWin }}" style="cursor:pointer;font-size:16px;opacity:.6;padding:0 2px">✕</div>
+        </div>
+      </sc-if>
+
+      <!-- CARD TAB -->
+      <sc-if value="{{ tabCard }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:18px">
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:58px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums">{{ stampCount }}</div>
+            <div style="padding-bottom:6px">
+              <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;color:#6d6d78;line-height:1">/ {{ requiredLabel }}</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;margin-top:5px;text-transform:uppercase">{{ progressNote }}</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:5px;margin-top:14px">
+            <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="6">
+              <div style="flex:1;height:6px;border-radius:99px;background:#22222a;overflow:hidden">
+                <sc-if value="{{ slot.filled }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;height:100%;background:#ff5a1f"></div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px">
+            <sc-for list="{{ domains }}" as="d" hint-placeholder-count="4">
+              <div style="border:1px solid #24242c;border-radius:13px;background:#101014;padding:11px 11px 9px;display:flex;flex-direction:column;gap:8px;min-width:0">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                  <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</div>
+                  <sc-if value="{{ d.done }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#ff5a1f;border:1px solid #ff5a1f55;border-radius:99px;padding:2px 5px">DONE</div>
+                  </sc-if>
+                  <sc-if value="{{ d.pending }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6d6d78;border:1px solid #2a2a34;border-radius:99px;padding:2px 5px">0/1</div>
+                  </sc-if>
+                </div>
+                <sc-for list="{{ d.stalls }}" as="s" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:7px;min-width:0">
+                    <sc-if value="{{ s.stamped }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:relative;width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center">
+                        <div style="position:absolute;inset:0;border-radius:50%;background:#ff5a1f;animation:ink .7s ease-out both"></div>
+                        <div style="width:22px;height:22px;border-radius:50%;border:2px solid #ff5a1f;color:#ff5a1f;display:grid;place-items:center;font-family:Archivo,sans-serif;font-weight:900;font-size:10px;animation:thud .5s cubic-bezier(.2,1.5,.4,1) both">✓</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ s.live }}" hint-placeholder-val="{{ false }}">
+                      <div style="width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:1px solid #ff5a1f;display:grid;place-items:center;color:#ff5a1f;font-size:9px;animation:blip 1.4s infinite">●</div>
+                    </sc-if>
+                    <sc-if value="{{ s.open }}" hint-placeholder-val="{{ true }}">
+                      <div style="width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:1px dashed #33333e"></div>
+                    </sc-if>
+                    <div style="font-size:12.5px;color:#a8a8b2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.name }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:16px;padding:13px 15px;border-radius:12px;background:#101014;border:1px solid #1e1e26;display:flex;gap:11px;align-items:flex-start">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff5a1f;border:1px solid #ff5a1f44;border-radius:5px;padding:3px 5px;letter-spacing:.08em">BOUND</div>
+            <div style="font-size:12.5px;color:#8a8a96;line-height:1.5;text-wrap:pretty">A stamp is signed into this phone's key at the moment you scan. It can't be exported, forwarded or replayed onto another device.</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- SCAN TAB -->
+      <sc-if value="{{ tabScan }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:#8a8a96;text-transform:uppercase">Point at the stall's screen</div>
+
+          <div style="position:relative;margin-top:12px;border-radius:16px;overflow:hidden;background:#08080a;border:1px solid #24242c;aspect-ratio:1/1;display:grid;place-items:center">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,#111117 0 12px,#0c0c11 12px 24px);opacity:.9"></div>
+            <div style="position:absolute;inset:30px;border-radius:10px;border:2px solid #ff5a1f;opacity:.85"></div>
+            <sc-if value="{{ scanIdle }}" hint-placeholder-val="{{ true }}">
+              <div style="position:relative;text-align:center;padding:0 26px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#8a8a96">CAMERA READY</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ scanBusy }}" hint-placeholder-val="{{ false }}">
+              <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#ff5a1f;animation:blip 1s infinite">READING…</div>
+            </sc-if>
+            <sc-if value="{{ scanDone }}" hint-placeholder-val="{{ false }}">
+              <div style="position:relative;text-align:center;padding:0 24px;animation:rise .3s ease both">
+                <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;line-height:1;color:{{ resultColor }}">{{ resultIcon }}</div>
+                <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;margin-top:10px">{{ resultTitle }}</div>
+                <div style="font-size:13px;color:#a8a8b2;margin-top:6px;line-height:1.45;text-wrap:pretty">{{ resultNote }}</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div onClick="{{ doScan }}" style="cursor:pointer;margin-top:14px;padding:17px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:17px;text-transform:uppercase" style-hover="background:#ff6f3c">Scan the stall QR</div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78;margin-top:18px">TRY THE ATTACKS</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px">
+            <div onClick="{{ scanPhoto }}" style="cursor:pointer;padding:12px;border-radius:11px;border:1px solid #2a2a34;background:#101014;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.4" style-hover="border-color:#4a4a58;color:#f2f0ec">{{ photoLabel }}</div>
+            <div onClick="{{ scanFriend }}" style="cursor:pointer;padding:12px;border-radius:11px;border:1px solid #2a2a34;background:#101014;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.4" style-hover="border-color:#4a4a58;color:#f2f0ec">{{ friendLabel }}</div>
+          </div>
+
+          <div style="margin-top:18px;padding:14px 15px;border-radius:12px;background:#101014;border:1px solid #1e1e26;font-size:12.5px;color:#8a8a96;line-height:1.55;text-wrap:pretty">The round stays open as long as the stall wants — the code on screen just redraws every {{ frameSecs }}s. You get a {{ graceSecs }}s grace, so a frame that redraws mid-scan still counts. Nothing here touches the network: your phone checks the signature itself.</div>
+        </div>
+      </sc-if>
+
+      <!-- TRAIL TAB -->
+      <sc-if value="{{ tabReceipts }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;text-transform:uppercase">Stamp trail</div>
+            <div onClick="{{ verifyChain }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#ff5a1f;border:1px solid #ff5a1f55;border-radius:99px;padding:6px 11px" style-hover="background:#ff5a1f18">VERIFY CHAIN</div>
+          </div>
+          <div style="font-size:12.5px;color:#8a8a96;margin-top:6px;line-height:1.5">Every stamp signs the one before it. Edit or inject one and the chain stops matching.</div>
+
+          <sc-if value="{{ noStamps }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:16px;padding:22px 16px;border:1px dashed #2a2a34;border-radius:12px;text-align:center;color:#6d6d78;font-size:13px">Nothing stamped yet. Find a stall with a round open.</div>
+          </sc-if>
+
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ receipts }}" as="r" hint-placeholder-count="0">
+              <div style="padding:12px 13px;border-radius:11px;background:#101014;border:1px solid #1e1e26">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                  <div style="font-weight:700;font-size:13.5px">{{ r.stall }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96">{{ r.time }}</div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#6d6d78;margin-top:5px;word-break:break-all;line-height:1.5">{{ r.domain }} · ROUND {{ r.round }} · SIG {{ r.hash }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div onClick="{{ leaveEvent }}" style="cursor:pointer;margin-top:22px;padding:13px;border-radius:11px;border:1px solid #3a2028;background:#150f12;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#e0616c" style-hover="background:#1d1216">LEAVE EVENT · WIPE CARD</div>
+        </div>
+      </sc-if>
+
+      <div style="position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none">
+        <div style="width:100%;max-width:430px;display:grid;grid-template-columns:repeat(3,1fr);background:#0d0d11f2;backdrop-filter:blur(10px);border-top:1px solid #1e1e26;pointer-events:auto">
+          <div onClick="{{ setTabCard }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ cCard }};border-top:2px solid {{ cCardBar }}">CARD</div>
+          <div onClick="{{ setTabScan }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ cScan }};border-top:2px solid {{ cScanBar }}">SCAN</div>
+          <div onClick="{{ setTabReceipts }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ cRec }};border-top:2px solid {{ cRecBar }}">TRAIL</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= ADMIN ================= -->
+  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column">
+
+      <div style="padding:16px 18px 12px;border-bottom:1px solid #1c1c22;display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#8a8a96">ADMIN · EVENT CONTROL</div>
+          <div style="font-weight:700;font-size:15px;margin-top:3px">{{ eventName }}</div>
+        </div>
+        <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;border:1px solid #2a2a34;border-radius:99px;padding:6px 10px" style-hover="color:#f2f0ec">EXIT</div>
+      </div>
+
+      <!-- ROSTER -->
+      <sc-if value="{{ noIssue }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:18px">
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:52px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums">{{ boundCount }}</div>
+            <div style="padding-bottom:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;text-transform:uppercase;line-height:1.5">stalls authorised<br />of {{ stallTotal }} registered</div>
+          </div>
+          <div style="font-size:12.5px;color:#8a8a96;margin-top:12px;line-height:1.5;text-wrap:pretty">A stall can't open a stamp round until you've bound a device to it. Issue the claim code face-to-face: they scan your screen, you confirm what you see. One binding per stall, for the whole event.</div>
+
+          <div style="margin-top:18px;padding:14px 15px;border-radius:12px;background:#101014;border:1px solid #1e1e26">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78">EVENT CODE · PUT IT ON THE INVITE AND THE DOOR</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.16em;color:#ff5a1f;margin-top:8px">{{ eventId }}</div>
+            <div style="font-size:12.5px;color:#8a8a96;margin-top:8px;line-height:1.45;text-wrap:pretty">Anyone with this joins the event — visitors and stalls alike. It's not an authorisation: stalls still get bound one by one, in person.</div>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78;margin-top:20px">STALL ROSTER</div>
+          <div style="margin-top:9px;display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ roster }}" as="st" hint-placeholder-count="12">
+              <div style="padding:11px 12px;border-radius:11px;background:#101014;border:1px solid {{ st.border }};display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <div style="min-width:0">
+                  <div style="font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ st.name }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6d6d78;margin-top:3px">{{ st.sub }}</div>
+                </div>
+                <sc-if value="{{ st.isFree }}" hint-placeholder-val="{{ true }}">
+                  <div onClick="{{ issueClaim }}" data-s="{{ st.id }}" style="cursor:pointer;flex:0 0 auto;padding:8px 11px;border-radius:9px;background:#ff5a1f;color:#12100e;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em" style-hover="background:#ff6f3c">ISSUE QR</div>
+                </sc-if>
+                <sc-if value="{{ st.isBound }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ unbind }}" data-s="{{ st.id }}" style="cursor:pointer;flex:0 0 auto;padding:8px 11px;border-radius:9px;border:1px solid #2a2a34;color:#8a8a96;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em" style-hover="color:#e0616c;border-color:#3a2028">UNBIND</div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ISSUE PANEL -->
+      <sc-if value="{{ hasIssue }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#8a8a96">AUTHORISING</div>
+          <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:26px;line-height:1.05;letter-spacing:-.02em;text-transform:uppercase;margin-top:5px">{{ issueStall }}</div>
+
+          <div style="margin-top:14px;padding:16px;border-radius:16px;background:#f2f0ec;position:relative;overflow:hidden">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <sc-for list="{{ claimQr }}" as="row" hint-placeholder-count="15">
+                <div style="display:flex;gap:3px">
+                  <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="15">
+                    <sc-if value="{{ c.on }}" hint-placeholder-val="{{ true }}">
+                      <div style="flex:1;aspect-ratio:1/1;border-radius:3px;background:#12100e"></div>
+                    </sc-if>
+                    <sc-if value="{{ c.off }}" hint-placeholder-val="{{ false }}">
+                      <div style="flex:1;aspect-ratio:1/1;border-radius:3px;background:#dedad2"></div>
+                    </sc-if>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ claimDead }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:#0b0b0de8;display:grid;place-items:center;text-align:center;padding:0 26px">
+                <div>
+                  <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:34px;color:#e0616c;line-height:1">✕</div>
+                  <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;margin-top:8px">Code expired</div>
+                  <div style="font-size:12.5px;color:#a8a8b2;margin-top:5px;line-height:1.45">Nothing can claim it now. Regenerate when you're stood in front of them.</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="width:100%;height:4px;border-radius:99px;background:#22222a;margin-top:12px;overflow:hidden">
+            <div style="height:100%;background:{{ ttlColor }};width:{{ ttlPct }}%"></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;margin-top:8px;text-align:center;line-height:1.6">SINGLE USE · DIES IN {{ ttlLeft }}s<br /><span style="color:#6d6d78">SPOKEN CODE {{ issueCode }} — SAY IT, DON'T SEND IT</span></div>
+
+          <sc-if value="{{ awaitingScan }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:16px;padding:14px 15px;border-radius:12px;background:#101014;border:1px solid #1e1e26;display:flex;gap:11px;align-items:center">
+              <div style="width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#8a8a96;animation:blip 1.4s infinite"></div>
+              <div style="font-size:12.5px;color:#8a8a96;line-height:1.45">Hold the screen up. Waiting for the stall's phone to scan.</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ scanLanded }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:16px;padding:14px 15px;border-radius:12px;background:#171208;border:1px solid #4a3a12;animation:rise .3s ease both">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#e0c05a">CLAIM REQUEST</div>
+              <div style="display:flex;align-items:baseline;gap:9px;margin-top:7px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.08em;color:#f2f0ec">{{ claimDevice }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96">{{ claimTime }}</div>
+              </div>
+              <div style="font-size:12.5px;color:#a8a8b2;margin-top:7px;line-height:1.45;text-wrap:pretty">Check it's the phone in their hand, not one across the aisle. Nothing is bound until you tap Done.</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ canConfirm }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ confirmClaim }}" style="cursor:pointer;margin-top:12px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Done · bind this device</div>
+          </sc-if>
+          <sc-if value="{{ cantConfirm }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:12px;padding:18px;border-radius:13px;background:#15151b;border:1px solid #24242c;color:#4e4e58;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase">Done · bind this device</div>
+          </sc-if>
+
+          <div style="display:flex;gap:9px;margin-top:9px">
+            <div onClick="{{ regenClaim }}" style="cursor:pointer;flex:1;padding:14px;border-radius:12px;border:1px solid #2a2a34;background:#13131a;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#a8a8b2" style-hover="border-color:#4a4a58;color:#f2f0ec">REGENERATE</div>
+            <div onClick="{{ cancelClaim }}" style="cursor:pointer;flex:1;padding:14px;border-radius:12px;border:1px solid #3a2028;background:#150f12;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#e0616c" style-hover="background:#1d1216">CANCEL</div>
+          </div>
+          <div style="font-size:12px;color:#6d6d78;margin-top:11px;line-height:1.5;text-wrap:pretty">Regenerate invalidates the previous code — a photo someone took ten seconds ago is already dead. Cancel walks away with the stall still unauthorised.</div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ================= ORGANISER ================= -->
+  <sc-if value="{{ isOrganiser }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding-bottom:78px">
+
+      <div style="padding:16px 18px 12px;border-bottom:1px solid #1c1c22;display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#8a8a96">STALL DEVICE · KIOSK</div>
+          <div style="font-weight:700;font-size:15px;margin-top:3px">{{ stallLabel }}</div>
+        </div>
+        <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;border:1px solid #2a2a34;border-radius:99px;padding:6px 10px" style-hover="color:#f2f0ec">EXIT</div>
+      </div>
+
+      <!-- ROUND -->
+      <sc-if value="{{ oTabRound }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:18px">
+          <sc-if value="{{ noStall }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase">Not authorised yet</div>
+              <div style="font-size:13px;color:#8a8a96;margin-top:6px;line-height:1.5;text-wrap:pretty">This phone can't stamp anyone. Find the admin, tell them which stall you're on, and scan the claim code off their screen. They confirm it on their end — then this device is that stall for the rest of the event.</div>
+
+              <div style="margin-top:16px;padding:14px 15px;border-radius:12px;background:#101014;border:1px solid #1e1e26;display:flex;gap:11px;align-items:flex-start">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a8a96;border:1px solid #2a2a34;border-radius:5px;padding:3px 5px;letter-spacing:.08em">THIS PHONE</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#f2f0ec;line-height:1.6">{{ stallDevice }}<br /><span style="color:#6d6d78;font-size:10.5px">THE ADMIN WILL SEE THESE FOUR CHARACTERS</span></div>
+              </div>
+
+              <div onClick="{{ scanClaim }}" style="cursor:pointer;margin-top:12px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Scan the admin's claim QR</div>
+
+              <sc-if value="{{ claimPending }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:12px;padding:14px 15px;border-radius:12px;background:#171208;border:1px solid #4a3a12;display:flex;gap:11px;align-items:center;animation:rise .3s ease both">
+                  <div style="width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#e0c05a;animation:blip 1.2s infinite"></div>
+                  <div style="font-size:12.5px;color:#a8a8b2;line-height:1.45">Scanned. Waiting on the admin to tap Done — watch their screen.</div>
+                </div>
+              </sc-if>
+
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78;margin-top:20px">TRY THE ATTACKS</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px">
+                <div onClick="{{ scanClaimOld }}" style="cursor:pointer;padding:12px;border-radius:11px;border:1px solid #2a2a34;background:#101014;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.4" style-hover="border-color:#4a4a58;color:#f2f0ec">A SCREENSHOT OF AN OLD CLAIM QR</div>
+                <div onClick="{{ scanClaimUsed }}" style="cursor:pointer;padding:12px;border-radius:11px;border:1px solid #2a2a34;background:#101014;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.4" style-hover="border-color:#4a4a58;color:#f2f0ec">A CODE ALREADY BOUND TO A STALL</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- closed: ready to open -->
+          <sc-if value="{{ roundClosed }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase">No round open</div>
+              <div style="font-size:13px;color:#8a8a96;margin-top:6px;line-height:1.5;text-wrap:pretty">Finish your pitch, then open a round and hold the phone up. Nobody is scanning while you talk — and nobody is rushing, the round lasts until you close it.</div>
+
+              <div style="margin-top:16px;padding:13px 14px;border-radius:12px;background:#101014;border:1px solid #1e1e26">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8a8a96">SEATS THIS ROUND</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                  <div onClick="{{ decSeats }}" style="cursor:pointer;width:34px;height:34px;border-radius:9px;border:1px solid #2a2a34;display:grid;place-items:center;color:#a8a8b2;font-size:16px">−</div>
+                  <div style="text-align:center">
+                    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:28px;font-variant-numeric:tabular-nums;line-height:1">{{ seatsLabel }}</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6d6d78;margin-top:4px">HOW MANY ARE STANDING HERE</div>
+                  </div>
+                  <div onClick="{{ incSeats }}" style="cursor:pointer;width:34px;height:34px;border-radius:9px;border:1px solid #2a2a34;display:grid;place-items:center;color:#a8a8b2;font-size:16px">+</div>
+                </div>
+                <div style="font-size:12px;color:#6d6d78;margin-top:10px;line-height:1.45">The round stops granting once the seats are gone. A forwarded code has nowhere to land.</div>
+              </div>
+
+              <div style="margin-top:9px;padding:13px 14px;border-radius:12px;background:#101014;border:1px solid #1e1e26">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#8a8a96">CODE REDRAW</div>
+                <div style="display:flex;gap:7px;margin-top:9px">
+                  <sc-for list="{{ refreshOpts }}" as="o" hint-placeholder-count="3">
+                    <div onClick="{{ setRefresh }}" data-ms="{{ o.ms }}" style="cursor:pointer;flex:1;padding:10px 0;border-radius:9px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ o.color }};background:{{ o.bg }};border:1px solid {{ o.border }}">{{ o.label }}</div>
+                  </sc-for>
+                </div>
+                <div style="font-size:12px;color:#6d6d78;margin-top:10px;line-height:1.45">Scans stay valid for {{ graceSecs }}s — a redraw mid-scan never times anyone out. Shorten it in a crowded hall, lengthen it if the projector is dim.</div>
+              </div>
+
+              <div onClick="{{ openRound }}" style="cursor:pointer;margin-top:14px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Open stamp round</div>
+              <sc-if value="{{ hasLast }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:12px;padding:12px 14px;border-radius:11px;background:#101014;border:1px solid #1e1e26;font-size:12.5px;color:#8a8a96;line-height:1.5">Last round: <strong style="color:#f2f0ec">{{ lastGranted }} stamped</strong> of {{ lastSeats }} seats · {{ lastBlocked }} blocked</div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- open: live QR -->
+          <sc-if value="{{ roundOpen }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#ff5a1f;display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.4s infinite"></span>ROUND {{ roundNo }} LIVE · {{ roundAge }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96">{{ granted }}/{{ seatsLabel }} SEATS</div>
+              </div>
+
+              <div style="margin-top:12px;padding:16px;border-radius:16px;background:#f2f0ec;position:relative;overflow:hidden">
+                <div style="display:flex;flex-direction:column;gap:3px">
+                  <sc-for list="{{ qrRows }}" as="row" hint-placeholder-count="15">
+                    <div style="display:flex;gap:3px">
+                      <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="15">
+                        <sc-if value="{{ c.on }}" hint-placeholder-val="{{ true }}">
+                          <div style="flex:1;aspect-ratio:1/1;border-radius:3px;background:#12100e"></div>
+                        </sc-if>
+                        <sc-if value="{{ c.off }}" hint-placeholder-val="{{ false }}">
+                          <div style="flex:1;aspect-ratio:1/1;border-radius:3px;background:#dedad2"></div>
+                        </sc-if>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:0;height:34px;background:linear-gradient(#ff5a1f00,#ff5a1f55);animation:sweep 2.6s linear infinite;pointer-events:none"></div>
+              </div>
+
+              <div style="width:100%;height:4px;border-radius:99px;background:#22222a;margin-top:12px;overflow:hidden">
+                <div style="height:100%;background:#ff5a1f;width:{{ framePct }}%"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;margin-top:8px;text-align:center;line-height:1.6">REDRAWS IN {{ frameLeft }}s · FRAME {{ frameLabel }}<br /><span style="color:#6d6d78">ANY SCAN FROM THE LAST {{ graceSecs }}s STILL COUNTS · SPOKEN CODE {{ spoken }}</span></div>
+
+              <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#6d6d78">WHO'S LANDED</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6d6d78">DEVICE IDS ONLY</div>
+              </div>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ claims }}" as="c" hint-placeholder-count="0">
+                  <div style="padding:11px 12px;border-radius:10px;background:#101014;border:1px solid {{ c.border }};display:flex;align-items:center;justify-content:space-between;gap:10px">
+                    <div style="min-width:0">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;color:{{ c.color }}">{{ c.device }}</div>
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6d6d78;margin-top:3px">{{ c.note }}</div>
+                    </div>
+                    <sc-if value="{{ c.revocable }}" hint-placeholder-val="{{ true }}">
+                      <div onClick="{{ revoke }}" data-h="{{ c.hash }}" style="cursor:pointer;padding:7px 10px;border-radius:8px;border:1px solid #2a2a34;color:#8a8a96;font-family:'JetBrains Mono',monospace;font-size:10px" style-hover="color:#e0616c;border-color:#3a2028">REVOKE</div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ noClaims }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:8px;padding:18px 14px;border:1px dashed #2a2a34;border-radius:11px;text-align:center;color:#6d6d78;font-size:12.5px">Nobody has scanned this round yet.</div>
+              </sc-if>
+
+              <div onClick="{{ closeRound }}" style="cursor:pointer;margin-top:16px;padding:17px;border-radius:13px;border:1px solid #2a2a34;background:#13131a;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:16px;text-transform:uppercase" style-hover="border-color:#4a4a58">Close round</div>
+              <div style="font-size:12px;color:#6d6d78;margin-top:9px;line-height:1.5;text-align:center">Closing kills the code instantly. Open a fresh one for the next group.</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- LOG -->
+      <sc-if value="{{ oTabLog }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px">
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:52px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums">{{ logCount }}</div>
+            <div style="padding-bottom:5px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;text-transform:uppercase;line-height:1.5">stamped here<br />across {{ roundsRun }} rounds</div>
+          </div>
+          <div style="font-size:12.5px;color:#8a8a96;margin-top:12px;line-height:1.5">Device ids only — no names, no accounts. The whole log dies with the event.</div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ log }}" as="l" hint-placeholder-count="0">
+              <div style="padding:11px 13px;border-radius:10px;background:#101014;border:1px solid #1e1e26;display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em">{{ l.device }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:{{ l.color }}">R{{ l.round }} · {{ l.time }} · {{ l.status }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ noLog }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:14px;padding:22px 16px;border:1px dashed #2a2a34;border-radius:12px;text-align:center;color:#6d6d78;font-size:13px">No rounds run yet.</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- SETUP -->
+      <sc-if value="{{ oTabSetup }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px">
+          <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:17px;text-transform:uppercase">Event setup</div>
+          <div style="font-size:12.5px;color:#8a8a96;margin-top:5px;line-height:1.5">Built on the fly by whoever runs the event. Domains, stalls, the win bar, the closing time.</div>
+
+          <div style="margin-top:16px;display:flex;gap:9px">
+            <div style="flex:1;padding:12px 13px;border-radius:11px;background:#101014;border:1px solid #1e1e26">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a8a96;letter-spacing:.1em">STAMPS TO WIN</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+                <div onClick="{{ decReq }}" style="cursor:pointer;width:28px;height:28px;border-radius:8px;border:1px solid #2a2a34;display:grid;place-items:center;color:#a8a8b2">−</div>
+                <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:24px;font-variant-numeric:tabular-nums">{{ requiredLabel }}</div>
+                <div onClick="{{ incReq }}" style="cursor:pointer;width:28px;height:28px;border-radius:8px;border:1px solid #2a2a34;display:grid;place-items:center;color:#a8a8b2">+</div>
+              </div>
+            </div>
+            <div onClick="{{ endEvent }}" style="cursor:pointer;flex:1;padding:12px 13px;border-radius:11px;background:#150f12;border:1px solid #3a2028;display:flex;flex-direction:column;justify-content:space-between">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#e0616c;letter-spacing:.1em">CLOSE NOW</div>
+              <div style="font-size:12.5px;color:#a8a8b2;margin-top:6px;line-height:1.35">Expire every card instantly</div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{ domains }}" as="d" hint-placeholder-count="4">
+              <div style="padding:12px;border-radius:12px;background:#101014;border:1px solid #1e1e26">
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input value="{{ d.name }}" onChange="{{ onDomainName }}" data-d="{{ d.id }}" style="flex:1;min-width:0;padding:8px 10px;border-radius:8px;background:#0b0b0d;border:1px solid #2a2a34;color:#f2f0ec;font-family:Archivo,sans-serif;font-weight:800;font-size:13px;text-transform:uppercase;outline:none" />
+                  <div onClick="{{ addStall }}" data-d="{{ d.id }}" style="cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid #2a2a34;color:#8a8a96;font-family:'JetBrains Mono',monospace;font-size:11px" style-hover="color:#f2f0ec">+ STALL</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:9px">
+                  <sc-for list="{{ d.stalls }}" as="s" hint-placeholder-count="3">
+                    <div style="display:flex;gap:7px;align-items:center">
+                      <input value="{{ s.name }}" onChange="{{ onStallName }}" data-d="{{ d.id }}" data-s="{{ s.id }}" style="flex:1;min-width:0;padding:8px 10px;border-radius:8px;background:#0b0b0d;border:1px solid #24242c;color:#a8a8b2;font-size:12.5px;outline:none" />
+                      <div style="padding:7px 9px;border-radius:8px;border:1px solid {{ s.manBorder }};color:{{ s.manColor }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em">{{ s.manLabel }}</div>
+                      <div onClick="{{ delStall }}" data-d="{{ d.id }}" data-s="{{ s.id }}" style="cursor:pointer;padding:7px 8px;border-radius:8px;border:1px solid #24242c;color:#6d6d78;font-size:11px" style-hover="color:#e0616c;border-color:#3a2028">✕</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div onClick="{{ addDomain }}" style="cursor:pointer;margin-top:12px;padding:13px;border-radius:11px;border:1px dashed #2a2a34;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8a8a96" style-hover="color:#f2f0ec;border-color:#4a4a58">+ ADD DOMAIN</div>
+        </div>
+      </sc-if>
+
+      <div style="position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none">
+        <div style="width:100%;max-width:430px;display:grid;grid-template-columns:repeat(3,1fr);background:#0d0d11f2;backdrop-filter:blur(10px);border-top:1px solid #1e1e26;pointer-events:auto">
+          <div onClick="{{ setTabRound }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ oRound }};border-top:2px solid {{ oRoundBar }}">ROUND</div>
+          <div onClick="{{ setTabLog }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ oLog }};border-top:2px solid {{ oLogBar }}">LOG</div>
+          <div onClick="{{ setTabSetup }}" style="cursor:pointer;padding:15px 0 17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ oSetup }};border-top:2px solid {{ oSetupBar }}">SETUP</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:92px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:20">
+      <div style="max-width:390px;margin:0 16px;padding:12px 15px;border-radius:11px;background:#f2f0ec;color:#12100e;font-size:13px;font-weight:500;box-shadow:0 12px 40px #000000aa;animation:rise .28s ease both">{{ toast }}</div>
+    </div>
+  </sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;eventName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Domain Rally · Q3 Offsite&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;requiredStamps&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;min&quot;:1,&quot;max&quot;:12,&quot;tsType&quot;:&quot;number&quot;}}">
+const B32 = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+function fnv(s) { let x = 2166136261; for (let i = 0; i < s.length; i++) { x ^= s.charCodeAt(i); x = Math.imul(x, 16777619); } return x >>> 0; }
+function tok(seed, len) {
+  let out = "";
+  for (let i = 0; out.length < len; i++) {
+    let n = fnv(seed + "|" + i);
+    for (let j = 0; j < 4 && out.length < len; j++) { out += B32.charAt(n % 32); n = Math.floor(n / 32); }
+  }
+  return out;
+}
+const FRAME_MS = 8000;
+const CLAIM_TTL = 120000;
+const SEED = [
+  { name: "Build", stalls: ["Platform Core", "Dev Tools", "Release Eng"] },
+  { name: "Data", stalls: ["Warehouse", "ML Ops", "Analytics"] },
+  { name: "Craft", stalls: ["Design Systems", "Research", "Accessibility"] },
+  { name: "Trust", stalls: ["Security", "Privacy", "SRE"] }
+];
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const domains = SEED.map((d, i) => ({
+      id: "d" + i, name: d.name,
+      stalls: d.stalls.map((n, j) => ({ id: "d" + i + "s" + j, name: n }))
+    }));
+    let key = "";
+    for (let i = 0; i < 12; i++) key += B32.charAt(Math.floor(Math.random() * 32));
+    this.state = {
+      screen: "welcome", tab: "card", oTab: "round",
+      domains, required: 6, nextId: 100,
+      deviceKey: key,
+      stamps: [], log: [], stall: null,
+      bindings: {}, issue: null, deadCodes: [],
+      created: false, joined: false, eventId: null, eventTitle: null,
+      nameDraft: "", joinDraft: "", joinErr: "",
+      round: null, roundNo: 0, seats: 8, lastRound: null, frameMs: 8000,
+      scan: "idle", result: null,
+      now: Date.now(), endsAt: Date.now() + 3 * 3600 * 1000,
+      expired: false, winDismissed: false, toast: null
+    };
+  }
+  componentDidMount() {
+    this.t = setInterval(() => {
+      const now = Date.now();
+      this.setState(s => ({ now, expired: s.expired || now >= s.endsAt }));
+    }, 400);
+  }
+  componentWillUnmount() { clearInterval(this.t); clearTimeout(this.st); clearTimeout(this.tt); }
+
+  short() { return this.state.deviceKey.slice(0, 4); }
+  stallDev() { return tok(this.state.deviceKey + "|stall", 4); }
+  qrOf(code) {
+    const rows = [];
+    for (let y = 0; y < 15; y++) {
+      const cells = [];
+      for (let x = 0; x < 15; x++) {
+        const eye = (x < 5 && y < 5) || (x > 9 && y < 5) || (x < 5 && y > 9);
+        const quiet = (x === 5 && y < 6) || (y === 5 && x < 6) ||
+                      (x === 9 && y < 6) || (y === 5 && x > 8) ||
+                      (x === 5 && y > 8) || (y === 9 && x < 6);
+        let on;
+        if (eye) {
+          const cx = x < 5 ? 2 : 12, cy = y < 5 ? 2 : 12;
+          const d = Math.max(Math.abs(x - cx), Math.abs(y - cy));
+          on = d === 0 || d === 2;
+        } else if (quiet) on = false;
+        else on = fnv(code + ":" + x + ":" + y) % 100 < 47;
+        cells.push({ on, off: !on });
+      }
+      rows.push({ cells });
+    }
+    return rows;
+  }
+  clock() { return new Date().toTimeString().slice(0, 5); }
+  claimAlive() { const i = this.state.issue; return !!i && Date.now() - i.issuedAt < CLAIM_TTL; }
+  newIssue(stallId) {
+    let nonce = "";
+    for (let i = 0; i < 6; i++) nonce += B32.charAt(Math.floor(Math.random() * 32));
+    return { stallId, nonce, issuedAt: Date.now(), scannedBy: null, scanTime: null };
+  }
+  tryClaim(kind) {
+    const iss = this.state.issue;
+    if (kind === "used") { this.flash("That QR was already burned — a claim code works once"); return; }
+    if (kind === "old") { this.flash("Doesn't match the live code — every regenerate kills the last one"); return; }
+    if (!iss) { this.flash("No claim code on offer — ask the admin to issue one"); return; }
+    if (!this.claimAlive()) { this.flash("Claim code expired — it only lives " + Math.round(CLAIM_TTL / 1000) + "s"); return; }
+    if (iss.scannedBy) { this.flash("Another device already claimed this code"); return; }
+    this.setState(p => ({ issue: Object.assign({}, p.issue, { scannedBy: this.stallDev(), scanTime: this.clock() }) }));
+    this.flash("Claim sent — waiting on the admin's confirmation");
+  }
+  boundStallId() {
+    const b = this.state.bindings, dev = this.stallDev();
+    for (const k in b) if (b[k].device === dev) return k;
+    return null;
+  }
+  fms() { return (this.state.round && this.state.round.frameMs) || this.state.frameMs; }
+  frameOf(t) { return Math.floor(t / this.fms()); }
+  payload(round, frame) { return round.stallId + ":" + round.nonce + ":" + frame; }
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this.tt);
+    this.tt = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+  findStall(sid) {
+    for (const d of this.state.domains) for (const s of d.stalls) if (s.id === sid) return { d, s };
+    return null;
+  }
+  pushLog(entry) { this.setState(s => ({ log: [entry].concat(s.log) })); }
+  showResult(r, ms) {
+    this.setState({ scan: "done", result: r });
+    clearTimeout(this.st);
+    this.st = setTimeout(() => this.setState({ scan: "idle", result: null }), ms || 3200);
+  }
+
+  // ---- collector: read a scanned payload ----
+  consume(raw) {
+    const s = this.state;
+    const time = new Date(s.now).toTimeString().slice(0, 5);
+    const parts = (raw || "").split(":");
+    const r = s.round;
+
+    if (!r || parts.length !== 3 || parts[1] !== r.nonce) {
+      this.showResult({ icon: "✕", color: "#e0616c", title: "No round open", note: "This code belongs to a round the stall has already closed. Ask them to open a fresh one." });
+      return;
+    }
+    const frame = Number(parts[2]);
+    const nowFrame = this.frameOf(s.now);
+    if (!(frame === nowFrame || frame === nowFrame - 1)) {
+      const age = Math.max(0, Math.round(((nowFrame - frame) * this.fms()) / 1000));
+      this.showResult({ icon: "✕", color: "#e0616c", title: "Stale frame", note: "That image is " + age + "s old — past the " + Math.round((this.fms() * 2) / 1000) + "s grace. Scan the live screen, in person." }, 3800);
+      this.pushLog({ device: "——", time, round: r.no, status: "STALE", color: "#e0616c" });
+      return;
+    }
+    const found = this.findStall(r.stallId);
+    if (s.stamps.some(x => x.stallId === r.stallId && !x.revoked)) {
+      this.showResult({ icon: "◎", color: "#e0c05a", title: "Already yours", note: found.s.name + " is stamped on your card. One per stall, so a second round adds nothing." });
+      this.pushLog({ device: this.short(), time, round: r.no, status: "DUPE", color: "#e0c05a" });
+      return;
+    }
+    if (r.claims.filter(c => !c.revoked).length >= r.seats) {
+      this.showResult({ icon: "✕", color: "#e0616c", title: "Seats gone", note: "This round was opened for " + r.seats + " people and they've all landed. The stall can open another." }, 3800);
+      this.pushLog({ device: this.short(), time, round: r.no, status: "FULL", color: "#e0616c" });
+      return;
+    }
+
+    const prev = s.stamps.length ? s.stamps[s.stamps.length - 1].hash : "GENESIS";
+    const hash = tok(prev + s.deviceKey + r.nonce + frame, 8);
+    const stamp = { stallId: r.stallId, domainId: found.d.id, at: s.now, time, hash, round: r.no, revoked: false };
+    this.setState(p => ({
+      stamps: p.stamps.concat([stamp]),
+      round: Object.assign({}, p.round, { claims: p.round.claims.concat([{ device: this.short(), time, hash, revoked: false, seq: p.round.claims.length + 1 }]) })
+    }));
+    this.pushLog({ device: this.short(), time, round: r.no, status: "OK", color: "#8a8a96" });
+    this.showResult({ icon: "✓", color: "#ff5a1f", title: "Stamped", note: found.d.name + " / " + found.s.name + " · signed into this phone" }, 2600);
+    this.flash("Stamp landed — " + found.s.name);
+  }
+  scanWith(raw) {
+    if (this.state.expired) { this.flash("Event closed — the card is void"); return; }
+    this.setState({ scan: "busy", result: null });
+    clearTimeout(this.st);
+    this.st = setTimeout(() => this.consume(raw), 800);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const req = this.props.requiredStamps ?? s.required;
+    const mine = s.expired ? [] : s.stamps.filter(x => !x.revoked);
+    const ids = mine.map(x => x.stallId);
+    const liveStall = s.round ? s.round.stallId : null;
+
+    const domains = s.domains.map(d => {
+      const stalls = d.stalls.map(st => {
+        const on = ids.includes(st.id);
+        const live = !on && st.id === liveStall;
+        const b = s.bindings[st.id];
+        const mine = b && b.device === this.stallDev();
+        return {
+          id: st.id, name: st.name, stamped: on, live, open: !on && !live,
+          manLabel: mine ? "THIS PHONE" : (b ? b.device : "NO DEVICE"),
+          manColor: mine ? "#ff5a1f" : (b ? "#8a8a96" : "#6d6d78"),
+          manBorder: mine ? "#ff5a1f55" : "#24242c"
+        };
+      });
+      const hit = stalls.filter(x => x.stamped).length;
+      return { id: d.id, name: d.name, stalls, done: hit > 0, pending: hit === 0 };
+    });
+
+    const left = Math.max(0, s.endsAt - s.now);
+    const h = Math.floor(left / 3600000), m = Math.floor(left / 60000) % 60;
+    const frame = this.frameOf(s.now);
+    const fms = this.fms();
+    const frameLeft = fms - (s.now % fms);
+    const found = s.stall ? this.findStall(s.stall) : null;
+    const r = s.result || {};
+    const rd = s.round;
+    const liveClaims = rd ? rd.claims.filter(c => !c.revoked) : [];
+    const tabc = t => (s.tab === t ? "#f2f0ec" : "#6d6d78");
+    const tabb = t => (s.tab === t ? "#ff5a1f" : "transparent");
+    const otc = t => (s.oTab === t ? "#f2f0ec" : "#6d6d78");
+    const otb = t => (s.oTab === t ? "#ff5a1f" : "transparent");
+    const nStalls = s.domains.reduce((a, d) => a + d.stalls.length, 0);
+
+    const qrRows = rd ? this.qrOf(this.payload(rd, frame)) : [];
+
+    const dev = this.stallDev();
+    const iss = s.issue;
+    const roster = [];
+    s.domains.forEach(d => d.stalls.forEach(st => {
+      const b = s.bindings[st.id];
+      const pending = iss && iss.stallId === st.id;
+      roster.push({
+        id: st.id, name: st.name, isFree: !b, isBound: !!b,
+        border: b ? "#22301e" : "#1e1e26",
+        sub: b
+          ? d.name.toUpperCase() + " · BOUND TO " + b.device + " AT " + b.time
+          : d.name.toUpperCase() + (pending ? " · CLAIM IN PROGRESS" : " · NO DEVICE"),
+      });
+    }));
+    const issFound = iss ? this.findStall(iss.stallId) : null;
+    const claimLeft = iss ? Math.max(0, CLAIM_TTL - (s.now - iss.issuedAt)) : 0;
+    const claimLive = claimLeft > 0;
+    const age = rd ? Math.round((s.now - rd.openedAt) / 1000) : 0;
+
+    return {
+      isWelcome: s.screen === "welcome", isCollector: s.screen === "collector", isOrganiser: s.screen === "organiser",
+      goCollector: () => this.setState({ screen: "collector" }),
+      goOrganiser: () => this.setState({ screen: "organiser" }),
+      goHome: () => this.setState({ screen: s.joined ? "role" : "welcome" }),
+      leaveRole: () => this.setState({ screen: "welcome", joined: false }),
+      isCreate: s.screen === "create", isJoin: s.screen === "join", isRole: s.screen === "role",
+      created: s.created, joined: s.joined, eventId: s.eventId || "—",
+      goCreate: () => this.setState(p => ({ screen: "create", nameDraft: p.nameDraft || (this.props.eventName ?? "") })),
+      goJoin: () => this.setState({ screen: "join", joinErr: "" }),
+      nameDraft: s.nameDraft,
+      onNameDraft: e => this.setState({ nameDraft: e.target.value }),
+      createEvent: () => {
+        const nm = (s.nameDraft || "").trim();
+        if (!nm) { this.flash("Give the event a name first"); return; }
+        this.setState({
+          created: true, joined: false, eventTitle: nm,
+          eventId: "RLY-" + tok(nm + Math.random(), 4),
+          screen: "admin", oTab: "round", expired: false, endsAt: Date.now() + 3 * 3600 * 1000
+        });
+        this.flash("Event live · you're the admin");
+      },
+      joinDraft: s.joinDraft,
+      onJoinDraft: e => this.setState({ joinDraft: e.target.value, joinErr: "" }),
+      fillCode: () => this.setState({ joinDraft: s.eventId || "", joinErr: "" }),
+      joinEvent: () => {
+        const code = (s.joinDraft || "").trim().toUpperCase().replace(/\s+/g, "");
+        if (!code) { this.flash("Type the code off the invite"); return; }
+        if (!s.created) { this.setState({ joinErr: "No event answers to that code. In this prototype, create one first." }); return; }
+        if (code !== s.eventId) { this.setState({ joinErr: "Wrong code. It's " + s.eventId.length + " characters, dash included — check the invite." }); return; }
+        if (s.expired) { this.setState({ joinErr: "That event has closed. Every card expired with it." }); return; }
+        this.setState({ joined: true, screen: "role", joinErr: "" });
+      },
+      eventName: s.eventTitle ?? (this.props.eventName ?? "Domain Rally · Q3 Offsite"),
+      eventLeft: h + "h " + String(m).padStart(2, "0") + "m",
+      deviceShort: this.short(), expired: s.expired,
+
+      isAdmin: s.screen === "admin",
+      goAdmin: () => this.setState({ screen: "admin" }),
+      roster, stallTotal: nStalls, boundCount: Object.keys(s.bindings).length,
+      noIssue: !iss, hasIssue: !!iss,
+      issueStall: issFound ? issFound.d.name + " / " + issFound.s.name : "—",
+      claimQr: iss ? this.qrOf("claim:" + iss.stallId + ":" + iss.nonce) : [],
+      issueCode: iss ? tok(iss.nonce + ":spoken", 4) : "—",
+      ttlLeft: Math.ceil(claimLeft / 1000),
+      ttlPct: Math.round((claimLeft / CLAIM_TTL) * 100),
+      ttlColor: claimLeft < 30000 ? "#e0616c" : "#ff5a1f",
+      claimDead: !!iss && !claimLive,
+      awaitingScan: !!iss && claimLive && !iss.scannedBy,
+      scanLanded: !!iss && !!iss.scannedBy,
+      claimDevice: iss && iss.scannedBy ? iss.scannedBy : "——",
+      claimTime: iss && iss.scanTime ? iss.scanTime : "",
+      canConfirm: !!iss && claimLive && !!iss.scannedBy,
+      cantConfirm: !iss || !claimLive || !iss.scannedBy,
+      issueClaim: e => {
+        if (s.expired) { this.flash("Event closed — nothing left to authorise"); return; }
+        this.setState({ issue: this.newIssue(e.currentTarget.dataset.s) });
+      },
+      regenClaim: () => this.setState(p => ({ issue: this.newIssue(p.issue.stallId) })),
+      cancelClaim: () => { this.setState({ issue: null }); this.flash("Claim cancelled · stall still unauthorised"); },
+      confirmClaim: () => {
+        if (!iss || !iss.scannedBy || !claimLive) return;
+        const nm = issFound ? issFound.s.name : "Stall";
+        this.setState(p => {
+          const b = Object.assign({}, p.bindings);
+          b[iss.stallId] = { device: iss.scannedBy, time: this.clock() };
+          return { bindings: b, issue: null, stall: iss.stallId };
+        });
+        this.flash(nm + " is bound to " + iss.scannedBy + " · it can stamp now");
+      },
+      unbind: e => {
+        const sid = e.currentTarget.dataset.s;
+        this.setState(p => {
+          const b = Object.assign({}, p.bindings);
+          delete b[sid];
+          return { bindings: b, stall: p.stall === sid ? null : p.stall, round: p.round && p.round.stallId === sid ? null : p.round };
+        });
+        this.flash("Device unbound · issue a fresh claim QR to re-authorise");
+      },
+      stallDevice: dev,
+      claimPending: !!iss && !!iss.scannedBy && claimLive,
+      scanClaim: () => this.tryClaim("live"),
+      scanClaimOld: () => this.tryClaim("old"),
+      scanClaimUsed: () => this.tryClaim("used"),
+      frameSecs: Math.round(fms / 1000), graceSecs: Math.round((fms * 2) / 1000),
+      refreshOpts: [6000, 8000, 12000].map(v => ({
+        label: Math.round(v / 1000) + "s", ms: v,
+        color: s.frameMs === v ? "#12100e" : "#8a8a96",
+        bg: s.frameMs === v ? "#ff5a1f" : "transparent",
+        border: s.frameMs === v ? "#ff5a1f" : "#2a2a34"
+      })),
+      setRefresh: e => { const v = Number(e.currentTarget.dataset.ms); this.setState({ frameMs: v }); },
+
+      domains, requiredLabel: req, stampCount: mine.length,
+      slots: Array.from({ length: req }, (_, i) => ({ filled: i < mine.length })),
+      progressNote: mine.length >= req ? "prize unlocked" : (req - mine.length) + " to go · " + nStalls + " stalls",
+      showWin: mine.length >= req && !s.winDismissed && !s.expired,
+      dismissWin: () => this.setState({ winDismissed: true }),
+
+      tabCard: s.tab === "card", tabScan: s.tab === "scan", tabReceipts: s.tab === "receipts",
+      setTabCard: () => this.setState({ tab: "card" }),
+      setTabScan: () => this.setState({ tab: "scan", scan: "idle", result: null }),
+      setTabReceipts: () => this.setState({ tab: "receipts" }),
+      cCard: tabc("card"), cScan: tabc("scan"), cRec: tabc("receipts"),
+      cCardBar: tabb("card"), cScanBar: tabb("scan"), cRecBar: tabb("receipts"),
+
+      scanIdle: s.scan === "idle", scanBusy: s.scan === "busy", scanDone: s.scan === "done",
+      resultIcon: r.icon || "", resultTitle: r.title || "", resultNote: r.note || "", resultColor: r.color || "#ff5a1f",
+      doScan: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now())) : "none:none:0"),
+      scanPhoto: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now()) - 5) : "none:none:0"),
+      scanFriend: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now()) - 12) : "none:none:0"),
+      photoLabel: "A PHOTO OF THE QR, " + Math.round(fms * 5 / 1000) + "s OLD",
+      friendLabel: "FORWARDED IN CHAT, " + Math.round(fms * 12 / 1000) + "s OLD",
+
+      receipts: mine.slice().reverse().map(x => {
+        const f = this.findStall(x.stallId);
+        return { stall: f ? f.s.name : "—", domain: f ? f.d.name.toUpperCase() : "—", time: x.time, hash: x.hash, round: x.round };
+      }),
+      noStamps: mine.length === 0,
+      verifyChain: () => this.flash(mine.length ? "Chain intact · " + mine.length + " signed stamps" : "Nothing to verify yet"),
+      leaveEvent: () => this.setState({ screen: "welcome", stamps: [], log: [], round: null, winDismissed: false, tab: "card" }),
+
+      stallLabel: found ? found.d.name + " / " + found.s.name : "Awaiting authorisation",
+      noStall: !s.stall,
+      oTabRound: s.oTab === "round", oTabLog: s.oTab === "log", oTabSetup: s.oTab === "setup",
+      setTabRound: () => this.setState({ oTab: "round" }),
+      setTabLog: () => this.setState({ oTab: "log" }),
+      setTabSetup: () => this.setState({ oTab: "setup" }),
+      oRound: otc("round"), oLog: otc("log"), oSetup: otc("setup"),
+      oRoundBar: otb("round"), oLogBar: otb("log"), oSetupBar: otb("setup"),
+
+      roundOpen: !!rd, roundClosed: !rd && !!s.stall,
+      roundNo: rd ? rd.no : 0, roundAge: age < 60 ? age + "s" : Math.floor(age / 60) + "m " + (age % 60) + "s",
+      qrRows, frameLeft: Math.ceil(frameLeft / 1000), framePct: Math.round((frameLeft / fms) * 100),
+      frameLabel: rd ? tok(rd.nonce + frame, 4) : "—",
+      spoken: rd ? tok(rd.nonce + ":" + frame + ":spoken", 3) : "—",
+      seatsLabel: rd ? rd.seats : s.seats, granted: liveClaims.length,
+      incSeats: () => this.setState(p => ({ seats: Math.min(40, p.seats + 1) })),
+      decSeats: () => this.setState(p => ({ seats: Math.max(1, p.seats - 1) })),
+      claims: rd ? rd.claims.slice().reverse().map(c => ({
+        device: c.device, hash: c.hash, revocable: !c.revoked,
+        color: c.revoked ? "#5f5f6a" : "#f2f0ec",
+        border: c.revoked ? "#241820" : "#1e1e26",
+        note: c.revoked ? "REVOKED BY STALL" : "#" + c.seq + " · " + c.time + " · SIG " + c.hash
+      })) : [],
+      noClaims: !rd || rd.claims.length === 0,
+      revoke: e => {
+        const hash = e.currentTarget.dataset.h;
+        this.setState(p => ({
+          round: Object.assign({}, p.round, { claims: p.round.claims.map(c => c.hash === hash ? Object.assign({}, c, { revoked: true }) : c) }),
+          stamps: p.stamps.map(x => x.hash === hash ? Object.assign({}, x, { revoked: true }) : x),
+          log: [{ device: "——", time: new Date(p.now).toTimeString().slice(0, 5), round: p.round.no, status: "REVOKED", color: "#e0616c" }].concat(p.log)
+        }));
+        this.flash("Stamp pulled back off that device");
+      },
+      openRound: () => {
+        if (s.expired) { this.flash("Event closed — no more rounds"); return; }
+        if (!s.stall || !s.bindings[s.stall] || s.bindings[s.stall].device !== this.stallDev()) { this.flash("This phone isn't authorised for a stall yet"); return; }
+        let nonce = "";
+        for (let i = 0; i < 6; i++) nonce += B32.charAt(Math.floor(Math.random() * 32));
+        this.setState(p => ({
+          roundNo: p.roundNo + 1,
+          round: { no: p.roundNo + 1, stallId: p.stall, nonce, openedAt: Date.now(), seats: p.seats, frameMs: p.frameMs, claims: [] }
+        }));
+      },
+      closeRound: () => {
+        const blocked = s.log.filter(x => x.round === rd.no && x.status !== "OK").length;
+        this.setState(p => ({
+          round: null,
+          lastRound: { granted: p.round.claims.filter(c => !c.revoked).length, seats: p.round.seats, blocked }
+        }));
+        this.flash("Round " + rd.no + " closed · code is dead");
+      },
+      hasLast: !!s.lastRound,
+      lastGranted: s.lastRound ? s.lastRound.granted : 0,
+      lastSeats: s.lastRound ? s.lastRound.seats : 0,
+      lastBlocked: s.lastRound ? s.lastRound.blocked : 0,
+
+      log: s.log, logCount: s.log.filter(x => x.status === "OK").length,
+      noLog: s.log.length === 0, roundsRun: s.roundNo,
+
+      incReq: () => this.setState(p => ({ required: Math.min(nStalls, p.required + 1) })),
+      decReq: () => this.setState(p => ({ required: Math.max(1, p.required - 1) })),
+      endEvent: () => { this.setState({ expired: true, endsAt: Date.now(), round: null }); this.flash("Event closed · every card expired"); },
+      onDomainName: e => { const id = e.target.dataset.d, v = e.target.value; this.setState(p => ({ domains: p.domains.map(d => d.id === id ? Object.assign({}, d, { name: v }) : d) })); },
+      onStallName: e => { const id = e.target.dataset.d, sid = e.target.dataset.s, v = e.target.value; this.setState(p => ({ domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.map(x => x.id === sid ? Object.assign({}, x, { name: v }) : x) })) })); },
+      addStall: e => { const id = e.currentTarget.dataset.d; this.setState(p => ({ nextId: p.nextId + 1, domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.concat([{ id: "n" + p.nextId, name: "New stall" }]) })) })); },
+      delStall: e => { const id = e.currentTarget.dataset.d, sid = e.currentTarget.dataset.s; this.setState(p => { const nb = Object.assign({}, p.bindings); delete nb[sid]; return { bindings: nb }; }); this.setState(p => ({ stall: p.stall === sid ? null : p.stall, round: p.round && p.round.stallId === sid ? null : p.round, domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.filter(x => x.id !== sid) })) })); },
+      addDomain: () => this.setState(p => ({ nextId: p.nextId + 2, domains: p.domains.concat([{ id: "n" + p.nextId, name: "New domain", stalls: [{ id: "n" + (p.nextId + 1), name: "New stall" }] }]) })),
+
+      toast: s.toast, hasToast: !!s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
