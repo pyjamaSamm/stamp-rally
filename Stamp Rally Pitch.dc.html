@@ -23,7 +23,7 @@
 <x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
 
   <section data-label="Title" data-screen-label="01" data-speaker-notes="One line: we had a paper roadmap card at the offsite. It worked. Then it went in the bin. This is that card, minus the paper." style="width:1920px;height:1080px;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:120px 130px;display:flex;flex-direction:column;justify-content:space-between">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.22em;color:#8a8a96;text-transform:uppercase">no internet · no install · no account · no server · no paper</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.22em;color:#8a8a96;text-transform:uppercase">no install · no account · no database · no paper</div>
     <div>
       <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:230px;line-height:.84;letter-spacing:-.045em;text-transform:uppercase">Stamp<br />Rally</div>
       <div style="font-size:44px;color:#a8a8b2;margin-top:52px;max-width:1180px;line-height:1.32;text-wrap:pretty">The paper stamp card that lives on your phone for one afternoon — and deletes itself when the event ends.</div>
@@ -53,7 +53,7 @@
     </div>
   </section>
 
-  <section data-label="Paper can't" data-screen-label="03" data-speaker-notes="Paper is not just wasteful, it is also weak. A stamp is a rubber shape anyone can borrow. Nobody knows which stalls were busy. Reprint every event." style="width:1920px;height:1080px;background:#101014;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:56px">
+  <section data-label="Paper can't" data-screen-label="03" data-speaker-notes="Paper is not just wasteful, it is also weak. A stamp is a rubber shape anyone can borrow, and nobody at the prize desk can spot a photocopy. The list is frozen the moment it goes to print. Reprint every event." style="width:1920px;height:1080px;background:#101014;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:56px">
     <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:104px;line-height:1;letter-spacing:-.03em;text-transform:uppercase">What paper can't do</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 60px;max-width:1620px">
       <div style="display:flex;gap:26px;align-items:flex-start;padding:30px 0;border-top:1px solid #24242c">
@@ -62,11 +62,11 @@
       </div>
       <div style="display:flex;gap:26px;align-items:flex-start;padding:30px 0;border-top:1px solid #24242c">
         <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#ff5a1f;padding-top:8px">02</div>
-        <div><div style="font-size:38px;font-weight:700">Tell you anything</div><div style="font-size:27px;color:#8a8a96;margin-top:10px;line-height:1.45">Which stall pulled a crowd? Nobody knows by Monday.</div></div>
+        <div><div style="font-size:38px;font-weight:700">Be checked, not eyeballed</div><div style="font-size:27px;color:#8a8a96;margin-top:10px;line-height:1.45">Six smudges at the prize desk. Nobody can tell a real card from a photocopy.</div></div>
       </div>
       <div style="display:flex;gap:26px;align-items:flex-start;padding:30px 0;border-top:1px solid #24242c">
         <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#ff5a1f;padding-top:8px">03</div>
-        <div><div style="font-size:38px;font-weight:700">Change at 11am</div><div style="font-size:27px;color:#8a8a96;margin-top:10px;line-height:1.45">A stall drops out and 200 cards are already wrong.</div></div>
+        <div><div style="font-size:38px;font-weight:700">Change the morning of</div><div style="font-size:27px;color:#8a8a96;margin-top:10px;line-height:1.45">A stall drops out at 9am and 200 cards are already printed wrong.</div></div>
       </div>
       <div style="display:flex;gap:26px;align-items:flex-start;padding:30px 0;border-top:1px solid #24242c">
         <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#ff5a1f;padding-top:8px">04</div>
@@ -75,17 +75,21 @@
     </div>
   </section>
 
-  <section data-label="What it is" data-screen-label="04" data-speaker-notes="The what. A link, not an app. Two roles from the same URL. Nothing installed, nothing signed up for." style="width:1920px;height:1080px;background:#ff5a1f;color:#12100e;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:60px">
+  <section data-label="What it is" data-screen-label="04" data-speaker-notes="The what. A link, not an app. Every role comes out of the same URL — organiser, stall, collector, and the prize desk at the end. Nothing installed, nothing signed up for." style="width:1920px;height:1080px;background:#ff5a1f;color:#12100e;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:60px">
     <div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;text-transform:uppercase;opacity:.65">What it is</div>
-    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:132px;line-height:.96;letter-spacing:-.035em;max-width:1560px;text-transform:uppercase">One link. Two roles.<br />Gone by dinner.</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:1500px">
-      <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
-        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:44px;text-transform:uppercase">Collector</div>
-        <div style="font-size:29px;color:#a8a8b2;margin-top:16px;line-height:1.45">Opens the link, gets a card. Scans the stall's code standing in front of it. Watches stamps land.</div>
+    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:132px;line-height:.96;letter-spacing:-.035em;max-width:1560px;text-transform:uppercase">One link. Every role.<br />Gone by dinner.</div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;max-width:1660px">
+      <div style="padding:42px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">Collector</div>
+        <div style="font-size:27px;color:#a8a8b2;margin-top:16px;line-height:1.45">Joins with the event code, gets a card. Scans the stall's screen standing in front of it. Watches stamps land.</div>
       </div>
-      <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
-        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:44px;text-transform:uppercase">Stall</div>
-        <div style="font-size:29px;color:#a8a8b2;margin-top:16px;line-height:1.45">Same link, picks "I'm a stall". Talks, then opens a stamp round and holds up the phone.</div>
+      <div style="padding:42px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">Stall</div>
+        <div style="font-size:27px;color:#a8a8b2;margin-top:16px;line-height:1.45">Same link. Gets authorised by the organiser in person, then opens a stamp round and holds up the phone.</div>
+      </div>
+      <div style="padding:42px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">Organiser</div>
+        <div style="font-size:27px;color:#a8a8b2;margin-top:16px;line-height:1.45">Creates the event, names the stalls, binds each stall's phone. Same link again at the prize desk.</div>
       </div>
     </div>
   </section>
@@ -148,14 +152,14 @@
       <div style="padding:44px;border:1px solid #24242c;border-radius:22px;background:#101014">
         <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:96px;color:#f2f0ec;line-height:1">0ms</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#8a8a96;margin-top:20px;letter-spacing:.1em">WAITING ON A SERVER</div>
-        <div style="font-size:26px;color:#8a8a96;margin-top:14px;line-height:1.45">Your phone verifies the signature itself. Airplane mode, same speed.</div>
+        <div style="font-size:26px;color:#8a8a96;margin-top:14px;line-height:1.45">Your phone verifies the signature itself. Loads once, then airplane mode all afternoon.</div>
       </div>
     </div>
     <div style="font-size:31px;color:#8a8a96;max-width:1560px;line-height:1.45;text-wrap:pretty">The margin is 2–4×, and it never depends on when you happened to point the camera. The grace frame also absorbs phone clock drift — the actual real-world failure mode.</div>
   </section>
 
   <section data-label="Three locks" data-screen-label="08" data-speaker-notes="What if someone photographs the QR and circulates it, telling everyone to scan fast? Three overlapping answers. Rotation handles the photo. Seats handle a live-streamed screen. Revoke handles the human judgement call." style="width:1920px;height:1080px;background:#ff5a1f;color:#12100e;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:58px">
-    <div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;text-transform:uppercase;opacity:.65">You can't send a stamp to a friend</div>
+    <div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;text-transform:uppercase;opacity:.65">You can't forward the stall's code</div>
     <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:118px;line-height:.98;letter-spacing:-.035em;margin-top:24px;text-transform:uppercase">Three locks, not one</div></div>
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px">
       <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
@@ -174,28 +178,100 @@
     <div style="font-size:29px;line-height:1.45;max-width:1600px;opacity:.72;text-wrap:pretty">Honest residual: someone video-calling a friend the live screen beats rotation. Seats and the visible claim list are why both exist.</div>
   </section>
 
-  <section data-label="Device-bound" data-screen-label="09" data-speaker-notes="The lock-key idea. The key is generated on the phone and never leaves it. A stamp is signed into that key, so it cannot be exported, forwarded or replayed. Screenshot your own card and you have a picture, not a stamp." style="width:1920px;height:1080px;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:60px">
-    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:126px;line-height:.98;letter-spacing:-.035em;max-width:1560px;text-transform:uppercase">Your phone is the lock <span style="color:#ff5a1f">and the key</span></div>
+  <section data-label="Signed and spendable once" data-screen-label="09" data-speaker-notes="What makes a stamp real, and what stops it being shared — two different mechanisms, and be precise about which does which. The stall's signature makes it genuine; the desk's spent list makes it single-use. Do NOT claim the card can't be copied: it can. Copying it just doesn't get you a second mug." style="width:1920px;height:1080px;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:60px">
+    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:126px;line-height:.98;letter-spacing:-.035em;max-width:1560px;text-transform:uppercase">A stall signs it. <span style="color:#ff5a1f">The desk spends it.</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:34px;max-width:1620px">
       <div style="padding:44px;border:1px solid #24242c;border-radius:22px;background:#101014">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:.12em;color:#ff5a1f">GENERATED HERE</div>
-        <div style="font-size:32px;margin-top:20px;line-height:1.4;color:#a8a8b2">A keypair is made on your device when you open the link. The private half never leaves it — not to us, not to the organiser.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:.12em;color:#ff5a1f">REAL BECAUSE A STALL SIGNED IT</div>
+        <div style="font-size:32px;margin-top:20px;line-height:1.4;color:#a8a8b2">Nobody can invent a stamp. It carries the signature of a stall the organiser authorised in person — and your phone checks that maths itself, offline.</div>
       </div>
       <div style="padding:44px;border:1px solid #24242c;border-radius:22px;background:#101014">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:.12em;color:#ff5a1f">SIGNED IN</div>
-        <div style="font-size:32px;margin-top:20px;line-height:1.4;color:#a8a8b2">Each stamp signs the one before it, into that key. Screenshot your card and you have a picture of a card.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:.12em;color:#ff5a1f">SPENT ONCE</div>
+        <div style="font-size:32px;margin-top:20px;line-height:1.4;color:#a8a8b2">Every stamp is a signature from a stall that was authorised in person — and each one can be redeemed exactly once, at the desk.</div>
       </div>
     </div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:27px;color:#6d6d78;letter-spacing:.06em">ONE STAMP PER STALL, PER DEVICE, FOREVER — WHICH IS TO SAY, UNTIL 6PM</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:27px;color:#6d6d78;letter-spacing:.06em">ONE STAMP PER STALL, REDEEMED ONCE — WHICH IS TO SAY, UNTIL 6PM</div>
+  </section>
+
+  <section data-label="Authorised stalls" data-screen-label="09a" data-speaker-notes="The obvious hole in any open link: if anyone can be a stall, anyone can stamp their own card. Answer is a two-scan handshake, in person. Both sides have to act, so neither can bind alone. Stress that this is the only step that requires the organiser to be physically present — and it happens once, before doors open." style="width:1920px;height:1080px;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:56px">
+    <div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;color:#ff5a1f;text-transform:uppercase">"So anyone can be a stall?"</div>
+    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:104px;line-height:1;letter-spacing:-.03em;margin-top:24px;text-transform:uppercase">No. Two scans,<br />face to face</div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px">
+      <div style="padding:36px;border:1px solid #24242c;border-radius:20px;background:#101014">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#6d6d78">STALL → ORGANISER</div>
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:36px;margin-top:20px;line-height:1.1">Shows its key</div>
+        <div style="font-size:25px;color:#8a8a96;margin-top:14px;line-height:1.45">The stall's phone puts its own public key on screen as a QR.</div>
+      </div>
+      <div style="padding:36px;border:1px solid #24242c;border-radius:20px;background:#101014">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#6d6d78">ORGANISER</div>
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:36px;margin-top:20px;line-height:1.1">Scans, then looks up</div>
+        <div style="font-size:25px;color:#8a8a96;margin-top:14px;line-height:1.45">Picks the stall from their roster. Checks it's the phone actually in the hand in front of them.</div>
+      </div>
+      <div style="padding:36px;border:1px solid #ff5a1f55;border-radius:20px;background:#1a1210">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#ff5a1f">ORGANISER → STALL</div>
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:36px;margin-top:20px;line-height:1.1">Signs a pass</div>
+        <div style="font-size:25px;color:#8a8a96;margin-top:14px;line-height:1.45">Taps Done. Their phone signs a certificate — "this key is Stall 7" — and hands it back as a QR.</div>
+      </div>
+      <div style="padding:36px;border:1px solid #24242c;border-radius:20px;background:#101014">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#6d6d78">FROM THEN ON</div>
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:36px;margin-top:20px;line-height:1.1">Expires at close</div>
+        <div style="font-size:25px;color:#8a8a96;margin-top:14px;line-height:1.45">Every pass carries the event's end time. Nothing to revoke tomorrow, because nothing survives tonight.</div>
+      </div>
+    </div>
+    <div style="font-size:31px;color:#8a8a96;max-width:1620px;line-height:1.45;text-wrap:pretty">Both sides have to act, so neither can bind alone. A stranger with the link gets a card, never a stamp pad.</div>
+  </section>
+
+  <section data-label="Prize desk" data-screen-label="09b" data-speaker-notes="The bit everyone forgets: what replaces punching the card. The desk verifies signatures — the one job a human cannot do by eye — and spends each receipt once. Say the alphabetical split out loud, it is the whole answer to multiple desks with no server between them." style="width:1920px;height:1080px;background:#ff5a1f;color:#12100e;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:56px">
+    <div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;text-transform:uppercase;opacity:.65">Claiming the prize</div>
+    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:112px;line-height:.98;letter-spacing:-.035em;margin-top:24px;text-transform:uppercase">The punch, without<br />the hole puncher</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px">
+      <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">One QR</div>
+        <div style="font-size:28px;color:#a8a8b2;margin-top:18px;line-height:1.45">The card turns itself into a claim code. The desk scans it and checks all six signatures in well under a second — the one job an eyeball can't do.</div>
+      </div>
+      <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">Spent once</div>
+        <div style="font-size:28px;color:#a8a8b2;margin-top:18px;line-height:1.45">Every accepted stamp goes on the desk's spent list. A second claim, a shared card, a replayed screenshot — all the same rejection.</div>
+      </div>
+      <div style="padding:44px;border-radius:22px;background:#12100e;color:#f2f0ec">
+        <div style="font-family:Archivo,sans-serif;font-weight:800;font-size:42px;text-transform:uppercase">A–M / N–Z</div>
+        <div style="font-size:28px;color:#a8a8b2;margin-top:18px;line-height:1.45">Two desks, no server between them: split the queue alphabetically and a repeat claim always comes back to the desk that already spent it.</div>
+      </div>
+    </div>
+    <div style="font-size:29px;line-height:1.45;max-width:1620px;opacity:.72;text-wrap:pretty">And the card visibly burns — watermarked, greyed, done at 17:42. Most double claims at real events are honest confusion, not fraud.</div>
+  </section>
+
+  <section data-label="Limits" data-screen-label="09c" data-speaker-notes="Say this slide before anyone else can. Nothing here is a surprise to us. The relay attack is real and unsolvable optically — proximity hardware would cost us every phone that doesn't have it. Land on the last line: the prize is a mug." style="width:1920px;height:1080px;background:#101014;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:100px 130px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+    <div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:.2em;color:#e0616c;text-transform:uppercase">Before you ask</div>
+    <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:100px;line-height:1;letter-spacing:-.03em;margin-top:22px;text-transform:uppercase">What we don't defend against</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 56px;max-width:1680px">
+      <div style="display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-top:1px solid #3a2028">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#e0616c;padding-top:8px">01</div>
+        <div><div style="font-size:36px;font-weight:700">The live relay</div><div style="font-size:26px;color:#8a8a96;margin-top:10px;line-height:1.45">A friend on a video call, holding the stall's screen up for you. No optical scheme survives it. Proximity hardware would fix it and cost us every phone that lacks it.</div></div>
+      </div>
+      <div style="display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-top:1px solid #3a2028">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#e0616c;padding-top:8px">02</div>
+        <div><div style="font-size:36px;font-weight:700">A wound-back clock</div><div style="font-size:26px;color:#8a8a96;margin-top:10px;line-height:1.45">Offline means your own phone judges whether a code is fresh. The floor: you still need a real signed frame from that stall, so somebody was there.</div></div>
+      </div>
+      <div style="display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-top:1px solid #3a2028">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#e0616c;padding-top:8px">03</div>
+        <div><div style="font-size:36px;font-weight:700">A stall stamping absent friends</div><div style="font-size:26px;color:#8a8a96;margin-top:10px;line-height:1.45">An authorised stall can grant its own stamp to anyone. Capped at one each — a full card still needs every stall in on it.</div></div>
+      </div>
+      <div style="display:flex;gap:24px;align-items:flex-start;padding:28px 0;border-top:1px solid #3a2028">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#e0616c;padding-top:8px">04</div>
+        <div><div style="font-size:36px;font-weight:700">A dead battery</div><div style="font-size:26px;color:#8a8a96;margin-top:10px;line-height:1.45">A stall screen at full brightness for four hours is the real failure mode, not fraud. Bring power banks. Paper never needed charging.</div></div>
+      </div>
+    </div>
+    <div style="font-size:31px;color:#a8a8b2;max-width:1620px;line-height:1.45;text-wrap:pretty">Every one of these is cheaper to accept than to fix, because <strong style="color:#f2f0ec">the prize is a mug</strong>. Guard the threshold, not the theory.</div>
   </section>
 
   <section data-label="No's" data-screen-label="10" data-speaker-notes="The marketing slide. Read a few of them out. Everything this thing does not need is the product." style="width:1920px;height:1080px;background:#101014;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:100px 130px;display:flex;flex-direction:column;justify-content:center;gap:52px">
     <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:104px;line-height:1;letter-spacing:-.03em;text-transform:uppercase">What it doesn't need</div>
     <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px">
-      <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No internet</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Verification is local maths on both phones</div></div>
+      <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No signal</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Loads once. Verification is local maths after that</div></div>
       <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No install</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">It's a web page. Open, done</div></div>
       <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No account</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">No email, no name, no OTP</div></div>
-      <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No server</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Static hosting. No database to breach</div></div>
+      <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No database</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Static files. Nothing to breach, nothing to bill</div></div>
       <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No training</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">"Scan the screen." That's the lecture</div></div>
       <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No NFC needed</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Camera only — every phone has one</div></div>
       <div style="padding:36px;border:1px solid #24242c;border-radius:18px;background:#0b0b0d"><div style="font-family:Archivo,sans-serif;font-weight:900;font-size:40px;color:#ff5a1f">No paper</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.4">Nothing to print, cut or bin</div></div>
@@ -228,7 +304,7 @@
           <div style="font-size:28px;color:#a8a8b2">A cross-event profile</div>
           <div style="font-size:28px;color:#a8a8b2">Anything after 6pm</div>
         </div>
-        <div style="font-size:25px;color:#6d6d78;margin-top:30px;line-height:1.45">Not "we promise not to look" — there is no field, and no server to put one in.</div>
+        <div style="font-size:25px;color:#6d6d78;margin-top:30px;line-height:1.45">Not "we promise not to look" — there is no field, and no database to put one in.</div>
       </div>
     </div>
   </section>
@@ -238,12 +314,12 @@
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
       <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">SHELL</div><div style="font-size:31px;font-weight:700;margin-top:16px">Static PWA</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">One HTML bundle on a CDN. Service worker caches it, so the hall's dead wifi doesn't matter.</div></div>
       <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">IDENTITY</div><div style="font-size:31px;font-weight:700;margin-top:16px">WebCrypto Ed25519</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">Non-extractable keypair in IndexedDB. The browser won't hand out the private half, even to our own code.</div></div>
-      <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">CODE ON SCREEN</div><div style="font-size:31px;font-weight:700;margin-top:16px">Signed QR frame</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">stall · round nonce · frame counter, signed by the event key. Redrawn every 8s by a local timer.</div></div>
+      <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">CODE ON SCREEN</div><div style="font-size:31px;font-weight:700;margin-top:16px">Signed QR frame</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">stall · round nonce · frame counter, signed by the stall's own bound key and chained to the event key. Redrawn every 8s by a local timer.</div></div>
       <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">CAMERA</div><div style="font-size:31px;font-weight:700;margin-top:16px">BarcodeDetector</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">Native decode where it exists, a small WASM fallback where it doesn't. No upload, ever.</div></div>
-      <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">THE CARD</div><div style="font-size:31px;font-weight:700;margin-top:16px">Local hash chain</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">Stamps in IndexedDB, each signing the last. Tamper with one and the chain stops matching.</div></div>
+      <div style="padding:38px;border:1px solid #24242c;border-radius:20px;background:#0b0b0d"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">THE CARD</div><div style="font-size:31px;font-weight:700;margin-top:16px">Signed receipts</div><div style="font-size:24px;color:#8a8a96;margin-top:12px;line-height:1.45">Each stamp is kept as the stall's own signature. Anyone can verify it later — and the desk spends each one once.</div></div>
       <div style="padding:38px;border:1px solid #ff5a1f55;border-radius:20px;background:#1a1210"><div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#ff5a1f;letter-spacing:.1em">EXPIRY</div><div style="font-size:31px;font-weight:700;margin-top:16px">Event key with an end time</div><div style="font-size:24px;color:#a8a8b2;margin-top:12px;line-height:1.45">Past it, nothing validates and the store self-wipes. Expiry is a property of the crypto, not a cleanup job.</div></div>
     </div>
-    <div style="font-size:29px;color:#8a8a96;line-height:1.45;max-width:1620px;text-wrap:pretty">Optional, never required: if there is wifi, stall devices gossip their round tallies to a live organiser dashboard. Turn it off and nothing else changes.</div>
+    <div style="font-size:29px;color:#8a8a96;line-height:1.45;max-width:1620px;text-wrap:pretty">The event itself is a static signed JSON — a file, not a record in a database. That single choice is what removes the server, the bill and the breach surface all at once.</div>
   </section>
 
   <section data-label="Who runs it" data-screen-label="13" data-speaker-notes="Who can create one — the answer is anyone who was going to print the cards. No developer, no procurement. Sixty seconds on a phone." style="width:1920px;height:1080px;background:#0b0b0d;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:100px 130px;display:flex;flex-direction:column;justify-content:center;gap:52px">
@@ -255,15 +331,15 @@
         <div style="font-size:29px;color:#a8a8b2;margin-top:22px;line-height:1.5">Types the domains and stalls on their phone. Sets the win bar and the closing time. Shares one link.</div>
       </div>
       <div style="padding:42px;border:1px solid #24242c;border-radius:20px;background:#101014">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#6d6d78;letter-spacing:.1em">STALL HOST · 10 SECONDS</div>
-        <div style="font-size:29px;color:#a8a8b2;margin-top:22px;line-height:1.5">Opens the link, taps their own stall once. That phone is now the stamp for the day.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#6d6d78;letter-spacing:.1em">STALL HOST · 20 SECONDS</div>
+        <div style="font-size:29px;color:#a8a8b2;margin-top:22px;line-height:1.5">Opens the link and swaps two QRs with the organiser, face to face. That phone is now the stamp for the day.</div>
       </div>
       <div style="padding:42px;border:1px solid #24242c;border-radius:20px;background:#101014">
         <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#6d6d78;letter-spacing:.1em">GUEST · 0 SECONDS</div>
         <div style="font-size:29px;color:#a8a8b2;margin-top:22px;line-height:1.5">Opens the link and has a card. Nothing to read, nothing to agree to.</div>
       </div>
     </div>
-    <div style="font-size:31px;color:#8a8a96;line-height:1.45;max-width:1620px;text-wrap:pretty">Mid-event edits are free: a stall drops out, delete the row. Try that with 200 printed cards.</div>
+    <div style="font-size:31px;color:#8a8a96;line-height:1.45;max-width:1620px;text-wrap:pretty">Changed the stall list at 9am? Reissue the link — nobody reprints anything. Once doors open the card is fixed for the day, which is exactly how a paper card behaves anyway.</div>
   </section>
 
   <section data-label="Where else" data-screen-label="14" data-speaker-notes="Same shape, other rooms. Anywhere a stamp card gets printed for one day. Keep it brief." style="width:1920px;height:1080px;background:#101014;color:#f2f0ec;font-family:'Space Grotesk',sans-serif;padding:110px 130px;display:flex;flex-direction:column;justify-content:center;gap:56px">
@@ -279,7 +355,7 @@
   <section data-label="Close" data-screen-label="15" data-speaker-notes="Land it on the one sentence. Then open the prototype and let them try the attack buttons themselves — that demo is the close." style="width:1920px;height:1080px;background:#ff5a1f;color:#12100e;font-family:'Space Grotesk',sans-serif;padding:100px 130px;display:flex;flex-direction:column;justify-content:space-between">
     <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.22em;text-transform:uppercase;opacity:.6">The pitch, in one line</div>
     <div>
-      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:118px;line-height:.94;letter-spacing:-.04em;max-width:1600px;text-transform:uppercase">A stamp card that can't be forwarded, faked, or thrown away</div>
+      <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:118px;line-height:.94;letter-spacing:-.04em;max-width:1600px;text-transform:uppercase">A stamp card that can't be faked, can't be spent twice, can't be thrown away</div>
       <div style="font-size:40px;margin-top:40px;opacity:.75;max-width:1300px;line-height:1.32;text-wrap:pretty">Because there's nothing to throw. It was only ever a link, and it's already gone.</div>
     </div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:.14em">TRY THE PROTOTYPE · SCAN A 40-SECOND-OLD PHOTO AND WATCH IT BOUNCE</div>
