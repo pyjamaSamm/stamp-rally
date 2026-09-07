@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="./src/config.js"></script>
+<script src="./src/lib/tokens.js"></script>
+<script src="./src/lib/qr.js"></script>
+<script src="./src/lib/spaces.js"></script>
+<script src="./src/lib/claims.js"></script>
+<script src="./src/lib/rounds.js"></script>
+<script src="./src/lib/navigation.js"></script>
 </head>
 <body>
 <x-dc>
@@ -58,14 +65,20 @@
         </div>
       </div>
 
-      <sc-if value="{{ created }}" hint-placeholder-val="{{ false }}">
-        <div onClick="{{ goAdmin }}" style="cursor:pointer;margin-top:14px;padding:14px 16px;border:1px solid #24242c;border-radius:12px;background:#101014;display:flex;align-items:center;justify-content:space-between;gap:12px" style-hover="border-color:#4a4a58">
-          <div style="min-width:0">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78">RESUME AS ADMIN</div>
-            <div style="font-weight:700;font-size:14.5px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ eventName }}</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a96;margin-top:3px">{{ eventId }} · closes in {{ eventLeft }}</div>
-          </div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5a1f;display:flex;align-items:center;gap:6px;flex:0 0 auto"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.6s ease-in-out infinite"></span>OPEN</div>
+      <sc-if value="{{ hasSpaces }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:26px;height:1px;background:#1c1c22"></div>
+        <div style="margin-top:26px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#6d6d78">YOUR EVENTS</div>
+        <div style="margin-top:9px;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ spacesList }}" as="sp2" hint-placeholder-count="0">
+            <div onClick="{{ openSpace }}" data-id="{{ sp2.id }}" style="cursor:pointer;padding:14px 16px;border:1px solid #24242c;border-radius:12px;background:#101014;display:flex;align-items:center;justify-content:space-between;gap:12px" style-hover="border-color:#4a4a58">
+              <div style="min-width:0">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#6d6d78">{{ sp2.roleLabel }}</div>
+                <div style="font-weight:700;font-size:14.5px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sp2.title }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a96;margin-top:3px">{{ sp2.id }} · {{ sp2.statusLabel }}</div>
+              </div>
+              <span style="width:7px;height:7px;flex:0 0 auto;border-radius:50%;background:{{ sp2.dotColor }};animation:blip 1.6s ease-in-out infinite"></span>
+            </div>
+          </sc-for>
         </div>
       </sc-if>
 
@@ -107,8 +120,8 @@
 
       <div onClick="{{ joinEvent }}" style="cursor:pointer;margin-top:14px;padding:18px;border-radius:13px;background:#ff5a1f;color:#12100e;text-align:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;text-transform:uppercase" style-hover="background:#ff6f3c">Join</div>
 
-      <sc-if value="{{ created }}" hint-placeholder-val="{{ false }}">
-        <div onClick="{{ fillCode }}" style="cursor:pointer;margin-top:12px;padding:13px 14px;border-radius:11px;border:1px dashed #2a2a34;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.6;text-align:center" style-hover="border-color:#4a4a58;color:#f2f0ec">PROTOTYPE · TAP TO FILL {{ eventId }}</div>
+      <sc-if value="{{ hasAdminSpace }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ fillCode }}" style="cursor:pointer;margin-top:12px;padding:13px 14px;border-radius:11px;border:1px dashed #2a2a34;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;line-height:1.6;text-align:center" style-hover="border-color:#4a4a58;color:#f2f0ec">PROTOTYPE · TAP TO FILL {{ quickFillCode }}</div>
       </sc-if>
     </div>
   </sc-if>
@@ -124,7 +137,7 @@
           <div style="font-weight:700;font-size:15px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ eventName }}</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a8a96;margin-top:3px">{{ eventId }} · closes in {{ eventLeft }}</div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5a1f;display:flex;align-items:center;gap:6px;flex:0 0 auto"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.6s ease-in-out infinite"></span>OPEN</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ liveColor }};display:flex;align-items:center;gap:6px;flex:0 0 auto"><span style="width:7px;height:7px;border-radius:50%;background:{{ liveColor }};animation:blip 1.6s ease-in-out infinite"></span>OPEN</div>
       </div>
 
       <div style="font-family:Archivo,sans-serif;font-weight:900;font-size:26px;line-height:1.05;letter-spacing:-.02em;text-transform:uppercase;margin-top:24px">Which one<br />are you?</div>
@@ -224,7 +237,7 @@
                       </div>
                     </sc-if>
                     <sc-if value="{{ s.live }}" hint-placeholder-val="{{ false }}">
-                      <div style="width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:1px solid #ff5a1f;display:grid;place-items:center;color:#ff5a1f;font-size:9px;animation:blip 1.4s infinite">●</div>
+                      <div style="width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:1px solid {{ liveColor }};display:grid;place-items:center;color:{{ liveColor }};font-size:9px;animation:blip 1.4s infinite">●</div>
                     </sc-if>
                     <sc-if value="{{ s.open }}" hint-placeholder-val="{{ true }}">
                       <div style="width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:1px dashed #33333e"></div>
@@ -328,7 +341,15 @@
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#8a8a96">ADMIN · EVENT CONTROL</div>
           <div style="font-weight:700;font-size:15px;margin-top:3px">{{ eventName }}</div>
         </div>
-        <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;border:1px solid #2a2a34;border-radius:99px;padding:6px 10px" style-hover="color:#f2f0ec">EXIT</div>
+        <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto">
+          <sc-if value="{{ notExpired }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ endEvent }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#e0616c;border:1px solid #3a2028;border-radius:99px;padding:6px 10px" style-hover="background:#150f12">END EVENT</div>
+          </sc-if>
+          <sc-if value="{{ expired }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#5f5f6a;border:1px solid #24242c;border-radius:99px;padding:6px 10px">ENDED</div>
+          </sc-if>
+          <div onClick="{{ goHome }}" style="cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96;border:1px solid #2a2a34;border-radius:99px;padding:6px 10px" style-hover="color:#f2f0ec">EXIT</div>
+        </div>
       </div>
 
       <!-- ROSTER -->
@@ -520,7 +541,7 @@
           <sc-if value="{{ roundOpen }}" hint-placeholder-val="{{ false }}">
             <div>
               <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#ff5a1f;display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:#ff5a1f;animation:blip 1.4s infinite"></span>ROUND {{ roundNo }} LIVE · {{ roundAge }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:{{ liveColor }};display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:{{ liveColor }};animation:blip 1.4s infinite"></span>ROUND {{ roundNo }} LIVE · {{ roundAge }}</div>
                 <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8a8a96">{{ granted }}/{{ seatsLabel }} SEATS</div>
               </div>
 
@@ -662,165 +683,160 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;eventName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Domain Rally · Q3 Offsite&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;requiredStamps&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;min&quot;:1,&quot;max&quot;:12,&quot;tsType&quot;:&quot;number&quot;}}">
-const B32 = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-function fnv(s) { let x = 2166136261; for (let i = 0; i < s.length; i++) { x ^= s.charCodeAt(i); x = Math.imul(x, 16777619); } return x >>> 0; }
-function tok(seed, len) {
-  let out = "";
-  for (let i = 0; out.length < len; i++) {
-    let n = fnv(seed + "|" + i);
-    for (let j = 0; j < 4 && out.length < len; j++) { out += B32.charAt(n % 32); n = Math.floor(n / 32); }
-  }
-  return out;
-}
-const FRAME_MS = 8000;
-const CLAIM_TTL = 120000;
-const SEED = [
-  { name: "Build", stalls: ["Platform Core", "Dev Tools", "Release Eng"] },
-  { name: "Data", stalls: ["Warehouse", "ML Ops", "Analytics"] },
-  { name: "Craft", stalls: ["Design Systems", "Research", "Accessibility"] },
-  { name: "Trust", stalls: ["Security", "Privacy", "SRE"] }
-];
+
+// ---------------------------------------------------------------------------
+// View layer. Every rule lives in src/lib and is unit-tested; this class only
+// holds state, calls into those pure functions, and maps their verdicts to
+// screen copy. Modules arrive on the global `SR` namespace via <script> tags.
+// ---------------------------------------------------------------------------
+const { COLORS, CLAIM_TTL } = SR;
+
+// Verdict -> what the collector sees. The rules that produce these verdicts
+// are in src/lib/rounds.js; only the wording lives here.
+const SCAN_COPY = {
+  no_round: () => ({
+    hold: 3200,
+    result: { icon: "✕", color: COLORS.danger, title: "No round open", note: "This code belongs to a round the stall has already closed. Ask them to open a fresh one." },
+  }),
+  stale: (v) => ({
+    hold: 3800,
+    log: { status: "STALE", color: COLORS.danger, device: "——" },
+    result: { icon: "✕", color: COLORS.danger, title: "Stale frame", note: "That image is " + v.ageSeconds + "s old — past the " + v.graceSeconds + "s grace. Scan the live screen, in person." },
+  }),
+  dupe: (v, ctx) => ({
+    hold: 3200,
+    log: { status: "DUPE", color: COLORS.warn },
+    result: { icon: "◎", color: COLORS.warn, title: "Already yours", note: ctx.stallName + " is stamped on your card. One per stall, so a second round adds nothing." },
+  }),
+  seats_full: (v) => ({
+    hold: 3800,
+    log: { status: "FULL", color: COLORS.danger },
+    result: { icon: "✕", color: COLORS.danger, title: "Seats gone", note: "This round was opened for " + v.seats + " people and they've all landed. The stall can open another." },
+  }),
+  ok: (v, ctx) => ({
+    hold: 2600,
+    log: { status: "OK", color: COLORS.muted },
+    result: { icon: "✓", color: COLORS.accent, title: "Stamped", note: ctx.domainName + " / " + ctx.stallName + " · signed into this phone" },
+  }),
+};
+
+const CLAIM_REJECTION = {
+  burned: "That QR was already burned — a claim code works once",
+  superseded: "Doesn't match the live code — every regenerate kills the last one",
+  none_offered: "No claim code on offer — ask the admin to issue one",
+  expired: "Claim code expired — it only lives " + Math.round(CLAIM_TTL / 1000) + "s",
+  already_scanned: "Another device already claimed this code",
+};
 
 class Component extends DCLogic {
   constructor(p) {
     super(p);
-    const domains = SEED.map((d, i) => ({
-      id: "d" + i, name: d.name,
-      stalls: d.stalls.map((n, j) => ({ id: "d" + i + "s" + j, name: n }))
-    }));
-    let key = "";
-    for (let i = 0; i < 12; i++) key += B32.charAt(Math.floor(Math.random() * 32));
     this.state = {
       screen: "welcome", tab: "card", oTab: "round",
-      domains, required: 6, nextId: 100,
-      deviceKey: key,
-      stamps: [], log: [], stall: null,
-      bindings: {}, issue: null, deadCodes: [],
-      created: false, joined: false, eventId: null, eventTitle: null,
+      deviceKey: SR.randomToken(12),
       nameDraft: "", joinDraft: "", joinErr: "",
-      round: null, roundNo: 0, seats: 8, lastRound: null, frameMs: 8000,
       scan: "idle", result: null,
-      now: Date.now(), endsAt: Date.now() + 3 * 3600 * 1000,
-      expired: false, winDismissed: false, toast: null
+      now: Date.now(), toast: null,
+      spaces: {}, activeId: null,
     };
   }
+
   componentDidMount() {
     this.t = setInterval(() => {
       const now = Date.now();
-      this.setState(s => ({ now, expired: s.expired || now >= s.endsAt }));
+      this.setState(p => {
+        const spaces = SR.expireDue(p.spaces, now);
+        return spaces === p.spaces ? { now } : { now, spaces };
+      });
     }, 400);
   }
   componentWillUnmount() { clearInterval(this.t); clearTimeout(this.st); clearTimeout(this.tt); }
 
-  short() { return this.state.deviceKey.slice(0, 4); }
-  stallDev() { return tok(this.state.deviceKey + "|stall", 4); }
-  qrOf(code) {
-    const rows = [];
-    for (let y = 0; y < 15; y++) {
-      const cells = [];
-      for (let x = 0; x < 15; x++) {
-        const eye = (x < 5 && y < 5) || (x > 9 && y < 5) || (x < 5 && y > 9);
-        const quiet = (x === 5 && y < 6) || (y === 5 && x < 6) ||
-                      (x === 9 && y < 6) || (y === 5 && x > 8) ||
-                      (x === 5 && y > 8) || (y === 9 && x < 6);
-        let on;
-        if (eye) {
-          const cx = x < 5 ? 2 : 12, cy = y < 5 ? 2 : 12;
-          const d = Math.max(Math.abs(x - cx), Math.abs(y - cy));
-          on = d === 0 || d === 2;
-        } else if (quiet) on = false;
-        else on = fnv(code + ":" + x + ":" + y) % 100 < 47;
-        cells.push({ on, off: !on });
-      }
-      rows.push({ cells });
-    }
-    return rows;
+  // ---- the space this device currently has open ----------------------------
+  active() { return this.state.spaces[this.state.activeId] || null; }
+  updateSpace(id, updater) {
+    this.setState(p => {
+      const cur = p.spaces[id];
+      if (!cur) return {};
+      const patch = typeof updater === "function" ? updater(cur, p) : updater;
+      return { spaces: Object.assign({}, p.spaces, { [id]: Object.assign({}, cur, patch) }) };
+    });
   }
+  updateActive(updater) { this.updateSpace(this.state.activeId, updater); }
+
+  // ---- identity ------------------------------------------------------------
+  short() { return SR.deviceShort(this.state.deviceKey); }
+  stallDev() { return SR.stallDeviceToken(this.state.deviceKey); }
+
+  // ---- thin wrappers over the libs, scoped to the open space ---------------
   clock() { return new Date().toTimeString().slice(0, 5); }
-  claimAlive() { const i = this.state.issue; return !!i && Date.now() - i.issuedAt < CLAIM_TTL; }
-  newIssue(stallId) {
-    let nonce = "";
-    for (let i = 0; i < 6; i++) nonce += B32.charAt(Math.floor(Math.random() * 32));
-    return { stallId, nonce, issuedAt: Date.now(), scannedBy: null, scanTime: null };
-  }
-  tryClaim(kind) {
-    const iss = this.state.issue;
-    if (kind === "used") { this.flash("That QR was already burned — a claim code works once"); return; }
-    if (kind === "old") { this.flash("Doesn't match the live code — every regenerate kills the last one"); return; }
-    if (!iss) { this.flash("No claim code on offer — ask the admin to issue one"); return; }
-    if (!this.claimAlive()) { this.flash("Claim code expired — it only lives " + Math.round(CLAIM_TTL / 1000) + "s"); return; }
-    if (iss.scannedBy) { this.flash("Another device already claimed this code"); return; }
-    this.setState(p => ({ issue: Object.assign({}, p.issue, { scannedBy: this.stallDev(), scanTime: this.clock() }) }));
-    this.flash("Claim sent — waiting on the admin's confirmation");
-  }
-  boundStallId() {
-    const b = this.state.bindings, dev = this.stallDev();
-    for (const k in b) if (b[k].device === dev) return k;
-    return null;
-  }
-  fms() { return (this.state.round && this.state.round.frameMs) || this.state.frameMs; }
-  frameOf(t) { return Math.floor(t / this.fms()); }
-  payload(round, frame) { return round.stallId + ":" + round.nonce + ":" + frame; }
+  fms() { return SR.frameMsOf(this.active()); }
+  frameOf(t) { return SR.frameOf(t, this.fms()); }
+  findStall(sid) { return SR.findStall(this.active(), sid); }
+  claimAlive() { const sp = this.active(); return !!sp && SR.isLive(sp.issue, Date.now()); }
+
   flash(msg) {
     this.setState({ toast: msg });
     clearTimeout(this.tt);
     this.tt = setTimeout(() => this.setState({ toast: null }), 2800);
   }
-  findStall(sid) {
-    for (const d of this.state.domains) for (const s of d.stalls) if (s.id === sid) return { d, s };
-    return null;
-  }
-  pushLog(entry) { this.setState(s => ({ log: [entry].concat(s.log) })); }
+  pushLog(entry) { this.updateActive(cur => ({ log: [entry].concat(cur.log) })); }
   showResult(r, ms) {
     this.setState({ scan: "done", result: r });
     clearTimeout(this.st);
     this.st = setTimeout(() => this.setState({ scan: "idle", result: null }), ms || 3200);
   }
 
-  // ---- collector: read a scanned payload ----
-  consume(raw) {
-    const s = this.state;
-    const time = new Date(s.now).toTimeString().slice(0, 5);
-    const parts = (raw || "").split(":");
-    const r = s.round;
-
-    if (!r || parts.length !== 3 || parts[1] !== r.nonce) {
-      this.showResult({ icon: "✕", color: "#e0616c", title: "No round open", note: "This code belongs to a round the stall has already closed. Ask them to open a fresh one." });
-      return;
-    }
-    const frame = Number(parts[2]);
-    const nowFrame = this.frameOf(s.now);
-    if (!(frame === nowFrame || frame === nowFrame - 1)) {
-      const age = Math.max(0, Math.round(((nowFrame - frame) * this.fms()) / 1000));
-      this.showResult({ icon: "✕", color: "#e0616c", title: "Stale frame", note: "That image is " + age + "s old — past the " + Math.round((this.fms() * 2) / 1000) + "s grace. Scan the live screen, in person." }, 3800);
-      this.pushLog({ device: "——", time, round: r.no, status: "STALE", color: "#e0616c" });
-      return;
-    }
-    const found = this.findStall(r.stallId);
-    if (s.stamps.some(x => x.stallId === r.stallId && !x.revoked)) {
-      this.showResult({ icon: "◎", color: "#e0c05a", title: "Already yours", note: found.s.name + " is stamped on your card. One per stall, so a second round adds nothing." });
-      this.pushLog({ device: this.short(), time, round: r.no, status: "DUPE", color: "#e0c05a" });
-      return;
-    }
-    if (r.claims.filter(c => !c.revoked).length >= r.seats) {
-      this.showResult({ icon: "✕", color: "#e0616c", title: "Seats gone", note: "This round was opened for " + r.seats + " people and they've all landed. The stall can open another." }, 3800);
-      this.pushLog({ device: this.short(), time, round: r.no, status: "FULL", color: "#e0616c" });
-      return;
-    }
-
-    const prev = s.stamps.length ? s.stamps[s.stamps.length - 1].hash : "GENESIS";
-    const hash = tok(prev + s.deviceKey + r.nonce + frame, 8);
-    const stamp = { stallId: r.stallId, domainId: found.d.id, at: s.now, time, hash, round: r.no, revoked: false };
-    this.setState(p => ({
-      stamps: p.stamps.concat([stamp]),
-      round: Object.assign({}, p.round, { claims: p.round.claims.concat([{ device: this.short(), time, hash, revoked: false, seq: p.round.claims.length + 1 }]) })
-    }));
-    this.pushLog({ device: this.short(), time, round: r.no, status: "OK", color: "#8a8a96" });
-    this.showResult({ icon: "✓", color: "#ff5a1f", title: "Stamped", note: found.d.name + " / " + found.s.name + " · signed into this phone" }, 2600);
-    this.flash("Stamp landed — " + found.s.name);
+  // ---- stall device claiming its authorisation -----------------------------
+  tryClaim(kind) {
+    const sp = this.active();
+    const issue = sp && sp.issue;
+    const verdict = SR.canScan(issue, Date.now(), kind);
+    if (!verdict.ok) { this.flash(CLAIM_REJECTION[verdict.reason]); return; }
+    this.updateActive(cur => ({ issue: SR.applyScan(cur.issue, this.stallDev(), this.clock()) }));
+    this.flash("Claim sent — waiting on the admin's confirmation");
   }
+
+  // ---- collector reading a scanned payload ---------------------------------
+  consume(raw) {
+    const sp = this.active();
+    if (!sp) return;
+    const now = this.state.now;
+    const time = new Date(now).toTimeString().slice(0, 5);
+
+    const verdict = SR.evaluateScan(sp, raw, now);
+    const found = verdict.stallId ? this.findStall(verdict.stallId) : null;
+    const ctx = {
+      stallName: found ? found.s.name : "That stall",
+      domainName: found ? found.d.name : "",
+    };
+    const copy = SCAN_COPY[verdict.status](verdict, ctx);
+
+    if (verdict.status === "ok") {
+      const stamp = SR.buildStamp(sp, verdict, this.state.deviceKey, now, time);
+      this.updateActive(cur => ({
+        stamps: cur.stamps.concat([stamp]),
+        round: Object.assign({}, cur.round, {
+          claims: cur.round.claims.concat([
+            { device: this.short(), time, hash: stamp.hash, revoked: false, seq: cur.round.claims.length + 1 },
+          ]),
+        }),
+      }));
+    }
+
+    if (copy.log) {
+      this.pushLog({
+        device: copy.log.device || this.short(),
+        time, round: verdict.round, status: copy.log.status, color: copy.log.color,
+      });
+    }
+    this.showResult(copy.result, copy.hold);
+    if (verdict.status === "ok") this.flash("Stamp landed — " + ctx.stallName);
+  }
+
   scanWith(raw) {
-    if (this.state.expired) { this.flash("Event closed — the card is void"); return; }
+    const sp = this.active();
+    if (sp && sp.expired) { this.flash("Event closed — the card is void"); return; }
     this.setState({ scan: "busy", result: null });
     clearTimeout(this.st);
     this.st = setTimeout(() => this.consume(raw), 800);
@@ -828,72 +844,74 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
-    const req = this.props.requiredStamps ?? s.required;
-    const mine = s.expired ? [] : s.stamps.filter(x => !x.revoked);
+    const sp = s.spaces[s.activeId] || SR.emptySpace();
+    // A screen that reads from the active space is invalid without one —
+    // resolve it home rather than rendering an event built from defaults.
+    const screen = SR.resolveScreen(s.screen, s.activeId);
+    const now = s.now;
+    const req = this.props.requiredStamps ?? sp.required;
+    const mine = sp.expired ? [] : sp.stamps.filter(x => !x.revoked);
     const ids = mine.map(x => x.stallId);
-    const liveStall = s.round ? s.round.stallId : null;
+    const rd = sp.round;
+    const liveStall = rd ? rd.stallId : null;
+    const dev = this.stallDev();
+    const iss = sp.issue;
 
-    const domains = s.domains.map(d => {
+    const domains = sp.domains.map(d => {
       const stalls = d.stalls.map(st => {
         const on = ids.includes(st.id);
         const live = !on && st.id === liveStall;
-        const b = s.bindings[st.id];
-        const mine = b && b.device === this.stallDev();
+        const b = sp.bindings[st.id];
+        const isMine = b && b.device === dev;
         return {
           id: st.id, name: st.name, stamped: on, live, open: !on && !live,
-          manLabel: mine ? "THIS PHONE" : (b ? b.device : "NO DEVICE"),
-          manColor: mine ? "#ff5a1f" : (b ? "#8a8a96" : "#6d6d78"),
-          manBorder: mine ? "#ff5a1f55" : "#24242c"
+          manLabel: isMine ? "THIS PHONE" : (b ? b.device : "NO DEVICE"),
+          manColor: isMine ? COLORS.accent : (b ? COLORS.muted : COLORS.faint),
+          manBorder: isMine ? "#ff5a1f55" : "#24242c",
         };
       });
       const hit = stalls.filter(x => x.stamped).length;
       return { id: d.id, name: d.name, stalls, done: hit > 0, pending: hit === 0 };
     });
 
-    const left = Math.max(0, s.endsAt - s.now);
-    const h = Math.floor(left / 3600000), m = Math.floor(left / 60000) % 60;
-    const frame = this.frameOf(s.now);
     const fms = this.fms();
-    const frameLeft = fms - (s.now % fms);
-    const found = s.stall ? this.findStall(s.stall) : null;
+    const frame = this.frameOf(now);
+    const frameLeft = fms - (now % fms);
+    const found = sp.stall ? this.findStall(sp.stall) : null;
     const r = s.result || {};
-    const rd = s.round;
     const liveClaims = rd ? rd.claims.filter(c => !c.revoked) : [];
-    const tabc = t => (s.tab === t ? "#f2f0ec" : "#6d6d78");
-    const tabb = t => (s.tab === t ? "#ff5a1f" : "transparent");
-    const otc = t => (s.oTab === t ? "#f2f0ec" : "#6d6d78");
-    const otb = t => (s.oTab === t ? "#ff5a1f" : "transparent");
-    const nStalls = s.domains.reduce((a, d) => a + d.stalls.length, 0);
+    const tabc = t => (s.tab === t ? COLORS.text : COLORS.faint);
+    const tabb = t => (s.tab === t ? COLORS.accent : "transparent");
+    const otc = t => (s.oTab === t ? COLORS.text : COLORS.faint);
+    const otb = t => (s.oTab === t ? COLORS.accent : "transparent");
+    const nStalls = SR.countStalls(sp);
 
-    const qrRows = rd ? this.qrOf(this.payload(rd, frame)) : [];
-
-    const dev = this.stallDev();
-    const iss = s.issue;
-    const roster = [];
-    s.domains.forEach(d => d.stalls.forEach(st => {
-      const b = s.bindings[st.id];
-      const pending = iss && iss.stallId === st.id;
-      roster.push({
-        id: st.id, name: st.name, isFree: !b, isBound: !!b,
-        border: b ? "#22301e" : "#1e1e26",
-        sub: b
-          ? d.name.toUpperCase() + " · BOUND TO " + b.device + " AT " + b.time
-          : d.name.toUpperCase() + (pending ? " · CLAIM IN PROGRESS" : " · NO DEVICE"),
-      });
-    }));
+    const roster = SR.buildRoster(sp);
     const issFound = iss ? this.findStall(iss.stallId) : null;
-    const claimLeft = iss ? Math.max(0, CLAIM_TTL - (s.now - iss.issuedAt)) : 0;
-    const claimLive = claimLeft > 0;
-    const age = rd ? Math.round((s.now - rd.openedAt) / 1000) : 0;
+    const claimLeft = SR.remainingMs(iss, now);
+    const claimLive = SR.isLive(iss, now);
+    const age = rd ? Math.round((now - rd.openedAt) / 1000) : 0;
+
+    const spacesList = SR.listSpaces(s.spaces, now);
+    const quickFillCode = SR.newestAdminCode(s.spaces);
 
     return {
-      isWelcome: s.screen === "welcome", isCollector: s.screen === "collector", isOrganiser: s.screen === "organiser",
+      isWelcome: screen === "welcome", isCollector: screen === "collector", isOrganiser: screen === "organiser",
       goCollector: () => this.setState({ screen: "collector" }),
       goOrganiser: () => this.setState({ screen: "organiser" }),
-      goHome: () => this.setState({ screen: s.joined ? "role" : "welcome" }),
-      leaveRole: () => this.setState({ screen: "welcome", joined: false }),
-      isCreate: s.screen === "create", isJoin: s.screen === "join", isRole: s.screen === "role",
-      created: s.created, joined: s.joined, eventId: s.eventId || "—",
+      goHome: () => this.setState(SR.exitTarget(screen, s.activeId, s.spaces[s.activeId])),
+      leaveRole: () => this.setState({ screen: "welcome", activeId: null }),
+      isCreate: screen === "create", isJoin: screen === "join", isRole: screen === "role",
+
+      hasSpaces: spacesList.length > 0, spacesList,
+      hasAdminSpace: !!quickFillCode, quickFillCode: quickFillCode || "",
+      openSpace: e => {
+        const id = e.currentTarget.dataset.id;
+        const target = s.spaces[id];
+        if (!target) return;
+        this.setState({ activeId: id, screen: target.isAdminHere ? "admin" : "role", oTab: "round" });
+      },
+
       goCreate: () => this.setState(p => ({ screen: "create", nameDraft: p.nameDraft || (this.props.eventName ?? "") })),
       goJoin: () => this.setState({ screen: "join", joinErr: "" }),
       nameDraft: s.nameDraft,
@@ -901,56 +919,60 @@ class Component extends DCLogic {
       createEvent: () => {
         const nm = (s.nameDraft || "").trim();
         if (!nm) { this.flash("Give the event a name first"); return; }
-        this.setState({
-          created: true, joined: false, eventTitle: nm,
-          eventId: "RLY-" + tok(nm + Math.random(), 4),
-          screen: "admin", oTab: "round", expired: false, endsAt: Date.now() + 3 * 3600 * 1000
-        });
+        const id = SR.eventCode(nm);
+        const space = SR.makeSpace(id, nm, true, Date.now());
+        this.setState(p => ({
+          spaces: Object.assign({}, p.spaces, { [id]: space }),
+          activeId: id, screen: "admin", oTab: "round",
+        }));
         this.flash("Event live · you're the admin");
       },
       joinDraft: s.joinDraft,
       onJoinDraft: e => this.setState({ joinDraft: e.target.value, joinErr: "" }),
-      fillCode: () => this.setState({ joinDraft: s.eventId || "", joinErr: "" }),
+      fillCode: () => this.setState({ joinDraft: quickFillCode || "", joinErr: "" }),
       joinEvent: () => {
         const code = (s.joinDraft || "").trim().toUpperCase().replace(/\s+/g, "");
         if (!code) { this.flash("Type the code off the invite"); return; }
-        if (!s.created) { this.setState({ joinErr: "No event answers to that code. In this prototype, create one first." }); return; }
-        if (code !== s.eventId) { this.setState({ joinErr: "Wrong code. It's " + s.eventId.length + " characters, dash included — check the invite." }); return; }
-        if (s.expired) { this.setState({ joinErr: "That event has closed. Every card expired with it." }); return; }
-        this.setState({ joined: true, screen: "role", joinErr: "" });
+        const target = s.spaces[code];
+        if (!target) { this.setState({ joinErr: "No event answers to that code. In this prototype, create one first (or use a code you've already created or joined)." }); return; }
+        if (target.expired) { this.setState({ joinErr: "That event has closed. Every card expired with it." }); return; }
+        this.setState({ activeId: code, screen: "role", joinErr: "" });
       },
-      eventName: s.eventTitle ?? (this.props.eventName ?? "Domain Rally · Q3 Offsite"),
-      eventLeft: h + "h " + String(m).padStart(2, "0") + "m",
-      deviceShort: this.short(), expired: s.expired,
 
-      isAdmin: s.screen === "admin",
-      goAdmin: () => this.setState({ screen: "admin" }),
-      roster, stallTotal: nStalls, boundCount: Object.keys(s.bindings).length,
+      eventName: sp.title || (this.props.eventName ?? "Domain Rally · Q3 Offsite"),
+      eventId: sp.id || "—",
+      eventLeft: SR.formatRemaining(sp.endsAt - now),
+      deviceShort: this.short(), expired: sp.expired, notExpired: !sp.expired,
+      liveColor: COLORS.live,
+
+      isAdmin: screen === "admin",
+      roster, stallTotal: nStalls, boundCount: Object.keys(sp.bindings).length,
       noIssue: !iss, hasIssue: !!iss,
       issueStall: issFound ? issFound.d.name + " / " + issFound.s.name : "—",
-      claimQr: iss ? this.qrOf("claim:" + iss.stallId + ":" + iss.nonce) : [],
-      issueCode: iss ? tok(iss.nonce + ":spoken", 4) : "—",
+      claimQr: iss ? SR.qrMatrix("claim:" + iss.stallId + ":" + iss.nonce) : [],
+      issueCode: SR.spokenCode(iss),
       ttlLeft: Math.ceil(claimLeft / 1000),
-      ttlPct: Math.round((claimLeft / CLAIM_TTL) * 100),
-      ttlColor: claimLeft < 30000 ? "#e0616c" : "#ff5a1f",
+      ttlPct: SR.ttlPercent(iss, now),
+      ttlColor: claimLeft < 30000 ? COLORS.danger : COLORS.accent,
       claimDead: !!iss && !claimLive,
       awaitingScan: !!iss && claimLive && !iss.scannedBy,
       scanLanded: !!iss && !!iss.scannedBy,
       claimDevice: iss && iss.scannedBy ? iss.scannedBy : "——",
       claimTime: iss && iss.scanTime ? iss.scanTime : "",
-      canConfirm: !!iss && claimLive && !!iss.scannedBy,
-      cantConfirm: !iss || !claimLive || !iss.scannedBy,
+      canConfirm: SR.canConfirm(iss, now),
+      cantConfirm: !SR.canConfirm(iss, now),
       issueClaim: e => {
-        if (s.expired) { this.flash("Event closed — nothing left to authorise"); return; }
-        this.setState({ issue: this.newIssue(e.currentTarget.dataset.s) });
+        if (sp.expired) { this.flash("Event closed — nothing left to authorise"); return; }
+        const stallId = e.currentTarget.dataset.s;
+        this.updateActive(() => ({ issue: SR.newIssue(stallId, Date.now()) }));
       },
-      regenClaim: () => this.setState(p => ({ issue: this.newIssue(p.issue.stallId) })),
-      cancelClaim: () => { this.setState({ issue: null }); this.flash("Claim cancelled · stall still unauthorised"); },
+      regenClaim: () => this.updateActive(cur => ({ issue: SR.newIssue(cur.issue.stallId, Date.now()) })),
+      cancelClaim: () => { this.updateActive(() => ({ issue: null })); this.flash("Claim cancelled · stall still unauthorised"); },
       confirmClaim: () => {
-        if (!iss || !iss.scannedBy || !claimLive) return;
+        if (!SR.canConfirm(iss, now)) return;
         const nm = issFound ? issFound.s.name : "Stall";
-        this.setState(p => {
-          const b = Object.assign({}, p.bindings);
+        this.updateActive(cur => {
+          const b = Object.assign({}, cur.bindings);
           b[iss.stallId] = { device: iss.scannedBy, time: this.clock() };
           return { bindings: b, issue: null, stall: iss.stallId };
         });
@@ -958,10 +980,10 @@ class Component extends DCLogic {
       },
       unbind: e => {
         const sid = e.currentTarget.dataset.s;
-        this.setState(p => {
-          const b = Object.assign({}, p.bindings);
+        this.updateActive(cur => {
+          const b = Object.assign({}, cur.bindings);
           delete b[sid];
-          return { bindings: b, stall: p.stall === sid ? null : p.stall, round: p.round && p.round.stallId === sid ? null : p.round };
+          return { bindings: b, stall: cur.stall === sid ? null : cur.stall, round: cur.round && cur.round.stallId === sid ? null : cur.round };
         });
         this.flash("Device unbound · issue a fresh claim QR to re-authorise");
       },
@@ -973,17 +995,17 @@ class Component extends DCLogic {
       frameSecs: Math.round(fms / 1000), graceSecs: Math.round((fms * 2) / 1000),
       refreshOpts: [6000, 8000, 12000].map(v => ({
         label: Math.round(v / 1000) + "s", ms: v,
-        color: s.frameMs === v ? "#12100e" : "#8a8a96",
-        bg: s.frameMs === v ? "#ff5a1f" : "transparent",
-        border: s.frameMs === v ? "#ff5a1f" : "#2a2a34"
+        color: sp.frameMs === v ? "#12100e" : COLORS.muted,
+        bg: sp.frameMs === v ? COLORS.accent : "transparent",
+        border: sp.frameMs === v ? COLORS.accent : "#2a2a34",
       })),
-      setRefresh: e => { const v = Number(e.currentTarget.dataset.ms); this.setState({ frameMs: v }); },
+      setRefresh: e => { const v = Number(e.currentTarget.dataset.ms); this.updateActive(() => ({ frameMs: v })); },
 
       domains, requiredLabel: req, stampCount: mine.length,
       slots: Array.from({ length: req }, (_, i) => ({ filled: i < mine.length })),
       progressNote: mine.length >= req ? "prize unlocked" : (req - mine.length) + " to go · " + nStalls + " stalls",
-      showWin: mine.length >= req && !s.winDismissed && !s.expired,
-      dismissWin: () => this.setState({ winDismissed: true }),
+      showWin: mine.length >= req && !sp.winDismissed && !sp.expired,
+      dismissWin: () => this.updateActive(() => ({ winDismissed: true })),
 
       tabCard: s.tab === "card", tabScan: s.tab === "scan", tabReceipts: s.tab === "receipts",
       setTabCard: () => this.setState({ tab: "card" }),
@@ -993,10 +1015,10 @@ class Component extends DCLogic {
       cCardBar: tabb("card"), cScanBar: tabb("scan"), cRecBar: tabb("receipts"),
 
       scanIdle: s.scan === "idle", scanBusy: s.scan === "busy", scanDone: s.scan === "done",
-      resultIcon: r.icon || "", resultTitle: r.title || "", resultNote: r.note || "", resultColor: r.color || "#ff5a1f",
-      doScan: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now())) : "none:none:0"),
-      scanPhoto: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now()) - 5) : "none:none:0"),
-      scanFriend: () => this.scanWith(rd ? this.payload(rd, this.frameOf(Date.now()) - 12) : "none:none:0"),
+      resultIcon: r.icon || "", resultTitle: r.title || "", resultNote: r.note || "", resultColor: r.color || COLORS.accent,
+      doScan: () => this.scanWith(rd ? SR.buildPayload(rd, this.frameOf(Date.now())) : "none:none:0"),
+      scanPhoto: () => this.scanWith(rd ? SR.buildPayload(rd, this.frameOf(Date.now()) - 5) : "none:none:0"),
+      scanFriend: () => this.scanWith(rd ? SR.buildPayload(rd, this.frameOf(Date.now()) - 12) : "none:none:0"),
       photoLabel: "A PHOTO OF THE QR, " + Math.round(fms * 5 / 1000) + "s OLD",
       friendLabel: "FORWARDED IN CHAT, " + Math.round(fms * 12 / 1000) + "s OLD",
 
@@ -1006,10 +1028,13 @@ class Component extends DCLogic {
       }),
       noStamps: mine.length === 0,
       verifyChain: () => this.flash(mine.length ? "Chain intact · " + mine.length + " signed stamps" : "Nothing to verify yet"),
-      leaveEvent: () => this.setState({ screen: "welcome", stamps: [], log: [], round: null, winDismissed: false, tab: "card" }),
+      leaveEvent: () => {
+        this.updateActive(() => ({ stamps: [], log: [], round: null, winDismissed: false }));
+        this.setState({ screen: "welcome", activeId: null, tab: "card" });
+      },
 
       stallLabel: found ? found.d.name + " / " + found.s.name : "Awaiting authorisation",
-      noStall: !s.stall,
+      noStall: !sp.stall,
       oTabRound: s.oTab === "round", oTabLog: s.oTab === "log", oTabSetup: s.oTab === "setup",
       setTabRound: () => this.setState({ oTab: "round" }),
       setTabLog: () => this.setState({ oTab: "log" }),
@@ -1017,66 +1042,77 @@ class Component extends DCLogic {
       oRound: otc("round"), oLog: otc("log"), oSetup: otc("setup"),
       oRoundBar: otb("round"), oLogBar: otb("log"), oSetupBar: otb("setup"),
 
-      roundOpen: !!rd, roundClosed: !rd && !!s.stall,
+      roundOpen: !!rd, roundClosed: !rd && !!sp.stall,
       roundNo: rd ? rd.no : 0, roundAge: age < 60 ? age + "s" : Math.floor(age / 60) + "m " + (age % 60) + "s",
-      qrRows, frameLeft: Math.ceil(frameLeft / 1000), framePct: Math.round((frameLeft / fms) * 100),
-      frameLabel: rd ? tok(rd.nonce + frame, 4) : "—",
-      spoken: rd ? tok(rd.nonce + ":" + frame + ":spoken", 3) : "—",
-      seatsLabel: rd ? rd.seats : s.seats, granted: liveClaims.length,
-      incSeats: () => this.setState(p => ({ seats: Math.min(40, p.seats + 1) })),
-      decSeats: () => this.setState(p => ({ seats: Math.max(1, p.seats - 1) })),
+      qrRows: rd ? SR.qrMatrix(SR.buildPayload(rd, frame)) : [],
+      frameLeft: Math.ceil(frameLeft / 1000), framePct: Math.round((frameLeft / fms) * 100),
+      frameLabel: rd ? SR.tok(rd.nonce + frame, 4) : "—",
+      spoken: rd ? SR.tok(rd.nonce + ":" + frame + ":spoken", 3) : "—",
+      seatsLabel: rd ? rd.seats : sp.seats, granted: liveClaims.length,
+      incSeats: () => this.updateActive(cur => ({ seats: Math.min(40, cur.seats + 1) })),
+      decSeats: () => this.updateActive(cur => ({ seats: Math.max(1, cur.seats - 1) })),
       claims: rd ? rd.claims.slice().reverse().map(c => ({
         device: c.device, hash: c.hash, revocable: !c.revoked,
-        color: c.revoked ? "#5f5f6a" : "#f2f0ec",
+        color: c.revoked ? COLORS.dead : COLORS.text,
         border: c.revoked ? "#241820" : "#1e1e26",
-        note: c.revoked ? "REVOKED BY STALL" : "#" + c.seq + " · " + c.time + " · SIG " + c.hash
+        note: c.revoked ? "REVOKED BY STALL" : "#" + c.seq + " · " + c.time + " · SIG " + c.hash,
       })) : [],
       noClaims: !rd || rd.claims.length === 0,
       revoke: e => {
         const hash = e.currentTarget.dataset.h;
-        this.setState(p => ({
-          round: Object.assign({}, p.round, { claims: p.round.claims.map(c => c.hash === hash ? Object.assign({}, c, { revoked: true }) : c) }),
-          stamps: p.stamps.map(x => x.hash === hash ? Object.assign({}, x, { revoked: true }) : x),
-          log: [{ device: "——", time: new Date(p.now).toTimeString().slice(0, 5), round: p.round.no, status: "REVOKED", color: "#e0616c" }].concat(p.log)
+        this.updateActive(cur => ({
+          round: Object.assign({}, cur.round, { claims: cur.round.claims.map(c => c.hash === hash ? Object.assign({}, c, { revoked: true }) : c) }),
+          stamps: cur.stamps.map(x => x.hash === hash ? Object.assign({}, x, { revoked: true }) : x),
+          log: [{ device: "——", time: new Date(now).toTimeString().slice(0, 5), round: cur.round.no, status: "REVOKED", color: COLORS.danger }].concat(cur.log),
         }));
         this.flash("Stamp pulled back off that device");
       },
       openRound: () => {
-        if (s.expired) { this.flash("Event closed — no more rounds"); return; }
-        if (!s.stall || !s.bindings[s.stall] || s.bindings[s.stall].device !== this.stallDev()) { this.flash("This phone isn't authorised for a stall yet"); return; }
-        let nonce = "";
-        for (let i = 0; i < 6; i++) nonce += B32.charAt(Math.floor(Math.random() * 32));
-        this.setState(p => ({
-          roundNo: p.roundNo + 1,
-          round: { no: p.roundNo + 1, stallId: p.stall, nonce, openedAt: Date.now(), seats: p.seats, frameMs: p.frameMs, claims: [] }
-        }));
+        const gate = SR.canOpenRound(sp, dev);
+        if (!gate.ok) {
+          this.flash(gate.reason === "event_closed" ? "Event closed — no more rounds" : "This phone isn't authorised for a stall yet");
+          return;
+        }
+        this.updateActive(cur => ({ roundNo: cur.roundNo + 1, round: SR.openRound(cur, Date.now()) }));
       },
       closeRound: () => {
-        const blocked = s.log.filter(x => x.round === rd.no && x.status !== "OK").length;
-        this.setState(p => ({
+        const blocked = sp.log.filter(x => x.round === rd.no && x.status !== "OK").length;
+        this.updateActive(cur => ({
           round: null,
-          lastRound: { granted: p.round.claims.filter(c => !c.revoked).length, seats: p.round.seats, blocked }
+          lastRound: { granted: SR.grantedSeats(cur.round), seats: cur.round.seats, blocked },
         }));
         this.flash("Round " + rd.no + " closed · code is dead");
       },
-      hasLast: !!s.lastRound,
-      lastGranted: s.lastRound ? s.lastRound.granted : 0,
-      lastSeats: s.lastRound ? s.lastRound.seats : 0,
-      lastBlocked: s.lastRound ? s.lastRound.blocked : 0,
+      hasLast: !!sp.lastRound,
+      lastGranted: sp.lastRound ? sp.lastRound.granted : 0,
+      lastSeats: sp.lastRound ? sp.lastRound.seats : 0,
+      lastBlocked: sp.lastRound ? sp.lastRound.blocked : 0,
 
-      log: s.log, logCount: s.log.filter(x => x.status === "OK").length,
-      noLog: s.log.length === 0, roundsRun: s.roundNo,
+      log: sp.log, logCount: sp.log.filter(x => x.status === "OK").length,
+      noLog: sp.log.length === 0, roundsRun: sp.roundNo,
 
-      incReq: () => this.setState(p => ({ required: Math.min(nStalls, p.required + 1) })),
-      decReq: () => this.setState(p => ({ required: Math.max(1, p.required - 1) })),
-      endEvent: () => { this.setState({ expired: true, endsAt: Date.now(), round: null }); this.flash("Event closed · every card expired"); },
-      onDomainName: e => { const id = e.target.dataset.d, v = e.target.value; this.setState(p => ({ domains: p.domains.map(d => d.id === id ? Object.assign({}, d, { name: v }) : d) })); },
-      onStallName: e => { const id = e.target.dataset.d, sid = e.target.dataset.s, v = e.target.value; this.setState(p => ({ domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.map(x => x.id === sid ? Object.assign({}, x, { name: v }) : x) })) })); },
-      addStall: e => { const id = e.currentTarget.dataset.d; this.setState(p => ({ nextId: p.nextId + 1, domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.concat([{ id: "n" + p.nextId, name: "New stall" }]) })) })); },
-      delStall: e => { const id = e.currentTarget.dataset.d, sid = e.currentTarget.dataset.s; this.setState(p => { const nb = Object.assign({}, p.bindings); delete nb[sid]; return { bindings: nb }; }); this.setState(p => ({ stall: p.stall === sid ? null : p.stall, round: p.round && p.round.stallId === sid ? null : p.round, domains: p.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.filter(x => x.id !== sid) })) })); },
-      addDomain: () => this.setState(p => ({ nextId: p.nextId + 2, domains: p.domains.concat([{ id: "n" + p.nextId, name: "New domain", stalls: [{ id: "n" + (p.nextId + 1), name: "New stall" }] }]) })),
+      incReq: () => this.updateActive(cur => ({ required: Math.min(nStalls, cur.required + 1) })),
+      decReq: () => this.updateActive(cur => ({ required: Math.max(1, cur.required - 1) })),
+      endEvent: () => { this.updateActive(() => ({ expired: true, endsAt: Date.now(), round: null })); this.flash("Event closed · every card expired"); },
+      onDomainName: e => { const id = e.target.dataset.d, v = e.target.value; this.updateActive(cur => ({ domains: cur.domains.map(d => d.id === id ? Object.assign({}, d, { name: v }) : d) })); },
+      onStallName: e => { const id = e.target.dataset.d, sid = e.target.dataset.s, v = e.target.value; this.updateActive(cur => ({ domains: cur.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.map(x => x.id === sid ? Object.assign({}, x, { name: v }) : x) })) })); },
+      addStall: e => { const id = e.currentTarget.dataset.d; this.updateActive(cur => ({ nextId: cur.nextId + 1, domains: cur.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.concat([{ id: "n" + cur.nextId, name: "New stall" }]) })) })); },
+      delStall: e => {
+        const id = e.currentTarget.dataset.d, sid = e.currentTarget.dataset.s;
+        this.updateActive(cur => {
+          const nb = Object.assign({}, cur.bindings);
+          delete nb[sid];
+          return {
+            bindings: nb,
+            stall: cur.stall === sid ? null : cur.stall,
+            round: cur.round && cur.round.stallId === sid ? null : cur.round,
+            domains: cur.domains.map(d => d.id !== id ? d : Object.assign({}, d, { stalls: d.stalls.filter(x => x.id !== sid) })),
+          };
+        });
+      },
+      addDomain: () => this.updateActive(cur => ({ nextId: cur.nextId + 2, domains: cur.domains.concat([{ id: "n" + cur.nextId, name: "New domain", stalls: [{ id: "n" + (cur.nextId + 1), name: "New stall" }] }]) })),
 
-      toast: s.toast, hasToast: !!s.toast
+      toast: s.toast, hasToast: !!s.toast,
     };
   }
 }
