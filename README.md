@@ -69,9 +69,3 @@ limits).
 
 Browser behaviour is not covered by `npm test`; changes to `index.html` still
 want a manual pass through create → bind a stall → open a round → scan.
-
-## The `.dc.html` files
-
-`Stamp Rally.dc.html` and `stamp-rally.dc.html` are byte-identical copies of
-`index.html`, kept for the Design Canvas editor. If you edit `index.html`,
-re-copy it over both or they will drift.
