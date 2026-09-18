@@ -11,6 +11,8 @@
 <script src="./src/lib/claims.js"></script>
 <script src="./src/lib/rounds.js"></script>
 <script src="./src/lib/navigation.js"></script>
+<script src="./src/lib/storage.js"></script>
+<script src="./src/lib/router.js"></script>
 </head>
 <body>
 <x-dc>
@@ -731,26 +733,112 @@ const CLAIM_REJECTION = {
 class Component extends DCLogic {
   constructor(p) {
     super(p);
+    // Degrades to an in-memory store in private windows, so the app runs
+    // either way — it just forgets between reloads.
+    this.storage = SR.safeStorage(typeof localStorage !== "undefined" ? localStorage : null);
+    const now = Date.now();
+
+    // The device key identifies this phone to stalls, so it has to outlive a
+    // reload or every binding made before the refresh would stop matching.
+    const deviceKey = SR.loadDeviceKey(this.storage) || SR.randomToken(12);
+    SR.saveDeviceKey(this.storage, deviceKey);
+
     this.state = {
       screen: "welcome", tab: "card", oTab: "round",
-      deviceKey: SR.randomToken(12),
+      deviceKey,
       nameDraft: "", joinDraft: "", joinErr: "",
       scan: "idle", result: null,
-      now: Date.now(), toast: null,
-      spaces: {}, activeId: null,
+      now, toast: null,
+      spaces: SR.loadSpaces(this.storage, now), // expired events are wiped here
+      activeId: null,
     };
+    this.lastRoute = null;
   }
 
   componentDidMount() {
+    this.adoptHash();
+    this.onHashChange = () => this.adoptHash();
+    if (typeof window !== "undefined") window.addEventListener("hashchange", this.onHashChange);
+
     this.t = setInterval(() => {
       const now = Date.now();
       this.setState(p => {
         const spaces = SR.expireDue(p.spaces, now);
-        return spaces === p.spaces ? { now } : { now, spaces };
+        if (spaces === p.spaces) return { now };
+        this.schedulePersist();
+        return { now, spaces };
       });
+      this.syncHash();
     }, 400);
   }
-  componentWillUnmount() { clearInterval(this.t); clearTimeout(this.st); clearTimeout(this.tt); }
+  componentWillUnmount() {
+    clearInterval(this.t);
+    clearTimeout(this.st);
+    clearTimeout(this.tt);
+    clearTimeout(this.persistT);
+    if (typeof window !== "undefined" && this.onHashChange) {
+      window.removeEventListener("hashchange", this.onHashChange);
+    }
+  }
+
+  // ---- persistence ---------------------------------------------------------
+  // Batched: mutations fire in bursts, and the 400ms tick must never write.
+  schedulePersist() {
+    clearTimeout(this.persistT);
+    this.persistT = setTimeout(() => SR.syncSpaces(this.storage, this.state.spaces), 0);
+  }
+
+  // ---- routing -------------------------------------------------------------
+  currentRoute() {
+    const s = this.state;
+    return { screen: SR.resolveScreen(s.screen, s.activeId), eventId: s.activeId };
+  }
+
+  /** Take navigation state from the URL — on load, and on every back/forward. */
+  adoptHash() {
+    if (typeof location === "undefined") return;
+    const parsed = SR.parseHash(location.hash);
+
+    // A URL can outlive the event it names: the event may have closed and been
+    // wiped, or belong to a device that isn't this one. Don't fabricate it.
+    const known = parsed.eventId && this.state.spaces[parsed.eventId] ? parsed.eventId : null;
+    const screen = SR.resolveScreen(parsed.screen, known);
+
+    const patch = { screen, activeId: known };
+    if (parsed.tab) patch.tab = parsed.tab;
+    if (parsed.oTab) patch.oTab = parsed.oTab;
+    // A join link carries the code so the field arrives filled in.
+    if (screen === "join" && parsed.eventId) patch.joinDraft = parsed.eventId;
+
+    const now = this.currentRoute();
+    const unchanged =
+      now.screen === screen &&
+      now.eventId === known &&
+      (!parsed.tab || parsed.tab === this.state.tab) &&
+      (!parsed.oTab || parsed.oTab === this.state.oTab);
+    if (unchanged) return;
+
+    this.setState(patch);
+  }
+
+  /** Push state back out to the URL, so back/forward have something to undo. */
+  syncHash() {
+    if (typeof location === "undefined" || typeof history === "undefined") return;
+    const s = this.state;
+    const route = this.currentRoute();
+    const desired = SR.toHash(route.screen, route.eventId, s.tab, s.oTab);
+    if (desired === (location.hash || SR.HOME_HASH)) {
+      this.lastRoute = route;
+      return;
+    }
+    try {
+      const method = SR.isNewHistoryEntry(this.lastRoute, route) ? "pushState" : "replaceState";
+      history[method](null, "", desired);
+    } catch (err) {
+      location.hash = desired; // e.g. file:// where pushState is refused
+    }
+    this.lastRoute = route;
+  }
 
   // ---- the space this device currently has open ----------------------------
   active() { return this.state.spaces[this.state.activeId] || null; }
@@ -761,6 +849,7 @@ class Component extends DCLogic {
       const patch = typeof updater === "function" ? updater(cur, p) : updater;
       return { spaces: Object.assign({}, p.spaces, { [id]: Object.assign({}, cur, patch) }) };
     });
+    this.schedulePersist();
   }
   updateActive(updater) { this.updateSpace(this.state.activeId, updater); }
 
@@ -925,6 +1014,7 @@ class Component extends DCLogic {
           spaces: Object.assign({}, p.spaces, { [id]: space }),
           activeId: id, screen: "admin", oTab: "round",
         }));
+        this.schedulePersist();
         this.flash("Event live · you're the admin");
       },
       joinDraft: s.joinDraft,
