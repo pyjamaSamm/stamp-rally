@@ -23,8 +23,12 @@ src/
     spaces.js       event "spaces" — the core data model
     claims.js       the stall-authorisation handshake rules
     rounds.js       stamp rounds and what a scanned code has to survive
+    navigation.js   where back/exit land, and which screens need an event
+    storage.js      localStorage persistence, incl. wipe-on-close
+    router.js       hash routes <-> navigation state
 tests/              unit tests for everything in src/lib
 support.js          Design Canvas runtime (vendored, do not edit)
+deck-stage.js       Design Canvas deck shell for pitch.html (vendored)
 ```
 
 `index.html` holds the template and a thin component. Every **rule** lives in
@@ -34,6 +38,41 @@ state, calls into those functions, and maps their verdicts to screen copy.
 The modules use a small UMD shim: in the browser they merge into one global
 `SR` namespace via the `<script>` tags in `index.html`; under Node they are
 CommonJS so `tests/` can require them. No build step, no bundler.
+
+## Persistence and URLs
+
+Events are saved to `localStorage`, one key per event (`sr1:space:<CODE>`)
+plus `sr1:device` for this device's identity — the device key has to outlive a
+reload or bindings made before it would stop matching. A refresh now returns
+you to the same event, on the same screen.
+
+**Wipe on close is real.** A space whose closing time has passed is deleted
+from storage on the next load, not merely hidden — "deletes itself when the
+event ends" has to be true on disk. Ending an event early does the same.
+
+Storage never breaks the app: private windows, disabled cookies and quota
+errors all fall back to an in-memory store, and the app runs normally, just
+forgetfully.
+
+Navigation lives in the URL as a hash route, so the phone back button and
+swipe-back work:
+
+```
+#/                      welcome
+#/create                name a new event
+#/join                  enter a code       #/join/RLY-8K2M  prefilled
+#/e/RLY-8K2M            role picker
+#/e/RLY-8K2M/card       collector          (also /scan, /receipts)
+#/e/RLY-8K2M/stall      stall kiosk        (also /stall/log, /stall/setup)
+#/e/RLY-8K2M/admin      organiser console
+```
+
+Hash rather than path because this deploys to GitHub Pages as a project site:
+the fragment never reaches the server, so there are no rewrite rules and no
+base path to configure, and it still works from `file://`. Changing screen
+pushes a history entry; flipping a tab replaces one, so back doesn't strand you
+on a dozen tab switches. A URL naming an event that has closed or was never on
+this device resolves to the welcome screen rather than fabricating one.
 
 ## Event spaces
 
@@ -56,7 +95,9 @@ The authorisation *flow* is real and worth reviewing. The cryptography is not:
 - **There is no camera.** The scan buttons call the same code path a camera
   would, so the rules are exercised, but nothing is read off a screen.
 - **Frame freshness trusts the device clock**, which an attacker controls.
-- **Nothing persists.** State is in memory; a refresh clears every event.
+- **Events do not exist off-device.** There is no server and no event file
+  yet, so an event created on one phone is invisible to every other one. A
+  join link is therefore only useful on the device that created the event.
 - **One device plays every role**, so you can walk the whole handshake solo.
 
 ## Testing
